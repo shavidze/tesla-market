@@ -1,0 +1,16 @@
+@import "tailwindcss" source(".");
+
+@theme {
+	--font-sans: "Noto Sans Georgian", ui-sans-serif, system-ui, sans-serif;
+	--color-bg: #fafafa;
+	--color-ink: #171717;
+	--color-ink-muted: #737373;
+	--color-accent: #e10600;
+	--color-line: #e5e5e5;
+	--radius-card: 8px;
+}
+
+html,
+body {
+	@apply bg-bg text-ink font-sans;
+}

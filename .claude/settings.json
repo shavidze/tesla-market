@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(git status)",
+      "Bash(git status *)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git show*)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git fetch*)",
+      "Bash(git branch*)",
+      "Bash(git checkout *)",
+      "Bash(git switch *)",
+      "Bash(git remote *)",
+      "Bash(git merge-base*)",
+      "Bash(git stash*)",
+      "Bash(ls*)",
+      "Bash(node *)",
+      "Bash(npm run*)",
+      "Bash(npm ls*)",
+      "Bash(npx tsc*)",
+      "Bash(npx vitest*)",
+      "Bash(npx drizzle-kit*)",
+      "Bash(npx wrangler d1*)",
+      "Bash(npx wrangler dev*)",
+      "Bash(npx wrangler types*)",
+      "WebSearch",
+      "WebFetch(domain:developers.cloudflare.com)",
+      "WebFetch(domain:reactrouter.com)",
+      "WebFetch(domain:tailwindcss.com)",
+      "WebFetch(domain:orm.drizzle.team)",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:github.com)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(rm -fr *)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -f*)",
+      "Bash(git config --global *)",
+      "Bash(git commit --amend*)",
+      "Bash(git commit *--no-verify*)",
+      "Bash(git push *--no-verify*)",
+      "Bash(git rebase*)",
+      "Bash(git filter-branch*)",
+      "Read(.env)",
+      "Read(.env.*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "node .claude/hooks/pre-push-verify.mjs" }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          { "type": "command", "command": "node .claude/hooks/check-uncommitted.mjs" }
+        ]
+      }
+    ]
+  }
+}

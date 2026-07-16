@@ -7,13 +7,20 @@ import { getDb } from "~/services/db";
 import { listCategories, listProducts } from "~/services/products.server";
 
 export function meta(_: Route.MetaArgs) {
+	const title = "TeslaMarket — Tesla-ს ორიგინალი და მეორადი ნაწილები რუსთავში";
+	const description =
+		"Tesla Model 3, Model Y, Model S, Model X ნაწილები — ორიგინალი და მეორადი. მაღაზია რუსთავში, დარეკვით შეკვეთა.";
 	return [
-		{ title: "TeslaMarket — Tesla-ს ორიგინალი და მეორადი ნაწილები რუსთავში" },
+		{ title },
+		{ name: "description", content: description },
+		{ property: "og:type", content: "website" },
+		{ property: "og:title", content: title },
+		{ property: "og:description", content: description },
 		{
-			name: "description",
-			content:
-				"Tesla Model 3, Model Y, Model S, Model X ნაწილები — ორიგინალი და მეორადი. მაღაზია რუსთავში, დარეკვით შეკვეთა.",
+			property: "og:image",
+			content: "https://teslamarket.sabashavidze.workers.dev/og.png",
 		},
+		{ name: "twitter:card", content: "summary_large_image" },
 	];
 }
 
@@ -30,18 +37,27 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 	const { categories, latest } = loaderData;
 	return (
 		<div className="mx-auto max-w-6xl px-4">
-			<section className="py-16 md:py-24">
-				<h1 className="max-w-2xl text-4xl font-bold tracking-tight text-ink md:text-5xl">
-					Tesla-ს ნაწილები.
-					<br />
-					რუსთავიდან.
-				</h1>
-				<p className="mt-4 max-w-xl text-lg text-ink-muted">
-					ორიგინალი და მეორადი ავტონაწილები Model 3, Model Y, Model S და Model X-სთვის.
-				</p>
-				<Link to="/catalog" className={buttonClass("primary", "mt-8")}>
-					კატალოგის ნახვა
-				</Link>
+			<section className="grid items-center gap-8 py-12 md:grid-cols-2 md:py-16">
+				<div>
+					<h1 className="max-w-2xl text-4xl font-bold tracking-tight text-ink md:text-5xl">
+						Tesla-ს ნაწილები.
+						<br />
+						რუსთავიდან.
+					</h1>
+					<p className="mt-4 max-w-xl text-lg text-ink-muted">
+						ორიგინალი და მეორადი ავტონაწილები Model 3, Model Y, Model S და Model X-სთვის.
+					</p>
+					<Link to="/catalog" className={buttonClass("primary", "mt-8")}>
+						კატალოგის ნახვა
+					</Link>
+				</div>
+				<img
+					src="/hero.png"
+					alt="ავტონაწილების ტექნიკური ნახაზი — მთლიანი ნაწილებისგან იწყობა"
+					className="hidden max-h-96 w-auto justify-self-end md:block lg:max-h-[28rem]"
+					width={896}
+					height={1200}
+				/>
 			</section>
 
 			<section className="py-12 md:py-16">

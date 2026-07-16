@@ -40,9 +40,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 			<section className="grid items-center gap-8 py-12 md:grid-cols-2 md:py-16">
 				<div>
 					<h1 className="max-w-2xl text-4xl font-bold tracking-tight text-ink md:text-5xl">
-						Tesla-ს ნაწილები.
-						<br />
-						რუსთავიდან.
+						Tesla-ს ნაწილები
 					</h1>
 					<p className="mt-4 max-w-xl text-lg text-ink-muted">
 						ორიგინალი და მეორადი ავტონაწილები Model 3, Model Y, Model S და Model X-სთვის.

@@ -1,8 +1,7 @@
 import { microLabelClass } from "~/design-system/Label";
-import { ADDRESS, PHONE } from "~/services/format";
+import { telHref } from "~/services/format";
 
-export function Footer() {
-	const telHref = `tel:${PHONE.replace(/\s+/g, "")}`;
+export function Footer({ phone, address }: { phone: string; address: string }) {
 	return (
 		<footer className="border-t border-line bg-white py-12">
 			<div className="mx-auto max-w-6xl px-4">
@@ -13,15 +12,15 @@ export function Footer() {
 					<div>
 						<p className={microLabelClass}>კონტაქტი</p>
 						<a
-							href={telHref}
+							href={telHref(phone)}
 							className="mt-2 flex min-h-11 w-fit items-center font-medium text-ink"
 						>
-							{PHONE}
+							{phone}
 						</a>
 					</div>
 					<div>
 						<p className={microLabelClass}>მისამართი</p>
-						<p className="mt-2 text-ink">{ADDRESS}</p>
+						<p className="mt-2 text-ink">{address}</p>
 					</div>
 				</div>
 				<div className="mt-8 border-t border-line pt-6 text-xs text-ink-muted">

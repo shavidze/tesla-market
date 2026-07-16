@@ -56,6 +56,11 @@ export const productPhotos = sqliteTable(
   (t) => [index("idx_photos_product").on(t.productId)],
 );
 
+export const settings = sqliteTable("settings", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
+});
+
 export const adminUsers = sqliteTable("admin_users", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   email: text("email").notNull().unique(),

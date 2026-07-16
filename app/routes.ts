@@ -15,6 +15,7 @@ export default [
 			index("routes/admin/index.tsx"),
 			route("products/new", "routes/admin/products.new.tsx"),
 			route("products/:id/edit", "routes/admin/products.$id.edit.tsx"),
+			route("settings", "routes/admin/settings.tsx"),
 		]),
 	]),
 ] satisfies RouteConfig;

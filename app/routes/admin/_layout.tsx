@@ -27,6 +27,12 @@ export default function AdminLayout() {
 						>
 							+ დამატება
 						</Link>
+						<Link
+							to="/admin/settings"
+							className="flex min-h-11 items-center text-ink underline-offset-4 hover:underline"
+						>
+							პარამეტრები
+						</Link>
 						<Form method="post" action="/admin/logout">
 							<button type="submit" className={buttonClass("secondary")}>
 								გასვლა

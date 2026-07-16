@@ -1,7 +1,8 @@
 import type { Condition, ProductStatus, TeslaModel } from "../../db/schema";
 
-export const PHONE = "+995 555 00 00 00";
-export const ADDRESS = "რუსთავი";
+export function telHref(phone: string): string {
+	return `tel:${phone.replace(/[^+\d]/g, "")}`;
+}
 
 export const MODEL_LABELS: Record<TeslaModel, string> = {
 	model_3: "Model 3",

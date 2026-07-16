@@ -2,16 +2,20 @@ import type { Route } from "./+types/product.$slug";
 import { buttonClass } from "~/design-system/Button";
 import { microLabelClass } from "~/design-system/Label";
 import { getDb } from "~/services/db";
-import { ADDRESS, CONDITION_LABELS, MODEL_LABELS, PHONE, formatPrice } from "~/services/format";
+import { CONDITION_LABELS, MODEL_LABELS, formatPrice, telHref } from "~/services/format";
 import { getProductBySlug } from "~/services/products.server";
+import { getSettings } from "~/services/settings.server";
 
 export async function loader({ params, context }: Route.LoaderArgs) {
 	const db = getDb(context.cloudflare.env);
-	const product = await getProductBySlug(db, params.slug);
+	const [product, siteSettings] = await Promise.all([
+		getProductBySlug(db, params.slug),
+		getSettings(db),
+	]);
 	if (!product || product.status !== "active") {
 		throw new Response("Not Found", { status: 404 });
 	}
-	return { product };
+	return { product, siteSettings };
 }
 
 export function meta({ data }: Route.MetaArgs) {
@@ -31,8 +35,8 @@ export function meta({ data }: Route.MetaArgs) {
 }
 
 export default function ProductPage({ loaderData }: Route.ComponentProps) {
-	const { product } = loaderData;
-	const telHref = `tel:${PHONE.replace(/\s+/g, "")}`;
+	const { product, siteSettings } = loaderData;
+	const callHref = telHref(siteSettings.phone);
 	const years =
 		product.yearFrom && product.yearTo
 			? `${product.yearFrom}–${product.yearTo}`
@@ -111,10 +115,10 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
 					</div>
 
 					<p className="mt-6 text-3xl font-bold text-accent">{formatPrice(product.priceTetri)}</p>
-					<a href={telHref} className={buttonClass("cta", "mt-4 h-12 w-full text-base")}>
+					<a href={callHref} className={buttonClass("cta", "mt-4 h-12 w-full text-base")}>
 						დარეკვა
 					</a>
-					<p className="mt-3 text-sm text-ink-muted">მიღება: მაღაზიაში, {ADDRESS}</p>
+					<p className="mt-3 text-sm text-ink-muted">მიღება: მაღაზიაში, {siteSettings.address}</p>
 				</div>
 			</div>
 		</div>

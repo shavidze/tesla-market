@@ -12,7 +12,7 @@
 		{
 			"binding": "DB",
 			"database_name": "teslamarket-db",
-			"database_id": "00000000-0000-0000-0000-000000000000",
+			"database_id": "a0c0ea2d-4e45-42a5-bc89-64c8968ea4b4",
 			"migrations_dir": "db/migrations"
 		}
 	],

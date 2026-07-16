@@ -106,9 +106,17 @@ GEMINI_API_KEY=
 SESSION_SECRET=
 
 # wrangler.jsonc bindings
-DB   — D1 database
-R2   — photos bucket
+DB   — D1 database (teslamarket-db, EEUR)
+R2   — photos bucket (teslamarket-photos)
 ```
+
+## Production
+
+- **URL:** https://teslamarket.sabashavidze.workers.dev
+- **Deploy:** `wsl -e bash -lc 'cd /mnt/c/Apps/teslamarket && set -a && source .env.cloudflare && set +a && npm run build && npm run deploy'`
+- **Remote DB:** `npm run db:migrate:remote` (იგივე env სჭირდება)
+- `.env.cloudflare` (gitignored) — CLOUDFLARE_API_TOKEN + CLOUDFLARE_ACCOUNT_ID
+- Secrets (SESSION_SECRET, GEMINI_API_KEY) — უკვე დაყენებულია `wrangler secret put`-ით
 
 ## Git
 

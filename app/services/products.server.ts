@@ -132,14 +132,23 @@ async function withPhotos(
 	return { ...product, photos };
 }
 
+export interface ProductDetail extends ProductWithPhotos {
+	categoryName: string;
+}
+
 export async function getProductBySlug(
 	db: Db,
 	slug: string,
-): Promise<ProductWithPhotos | undefined> {
+): Promise<ProductDetail | undefined> {
 	const rows = await db.select().from(products).where(eq(products.slug, slug));
 	const product = rows[0];
 	if (!product) return undefined;
-	return withPhotos(db, product);
+	const productWithPhotos = await withPhotos(db, product);
+	const categoryRows = await db
+		.select()
+		.from(categories)
+		.where(eq(categories.id, product.categoryId));
+	return { ...productWithPhotos, categoryName: categoryRows[0]?.nameKa ?? "" };
 }
 
 export async function getProductById(

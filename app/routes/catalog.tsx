@@ -42,10 +42,16 @@ export async function loader({ request, context }: Route.LoaderArgs) {
 export default function Catalog({ loaderData }: Route.ComponentProps) {
 	const { items, categories, filters } = loaderData;
 	return (
-		<div className="mx-auto max-w-5xl px-4 py-8">
-			<h1 className="text-2xl font-bold text-ink">კატალოგი</h1>
+		<div className="mx-auto max-w-6xl px-4 py-12 md:py-16">
+			<div className="flex flex-wrap items-baseline justify-between gap-2">
+				<h1 className="text-2xl font-bold tracking-tight text-ink">კატალოგი</h1>
+				<p className="text-sm text-ink-muted">{items.length} ნაწილი ნაპოვნია</p>
+			</div>
 
-			<Form method="get" className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+			<Form
+				method="get"
+				className="mt-6 flex flex-col gap-3 rounded-card border border-line bg-white p-4 sm:flex-row sm:flex-wrap"
+			>
 				<select
 					name="model"
 					defaultValue={filters.model}
@@ -95,7 +101,7 @@ export default function Catalog({ loaderData }: Route.ComponentProps) {
 			</Form>
 
 			{items.length > 0 ? (
-				<div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+				<div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
 					{items.map((product) => (
 						<ProductCard key={product.id} product={product} />
 					))}

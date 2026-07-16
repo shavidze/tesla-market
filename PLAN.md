@@ -23,7 +23,7 @@
 | 6 | კატალოგის მოდელი | Tesla model + წლები + კატეგორია + მდგომარეობა (ახალი/მეორადი) + OEM ნომერი (optional) |
 | 7 | Stack | ერთი full-stack აპი: React Router 7 + Tailwind v4 + Drizzle |
 | 8 | Hosting | Cloudflare Workers + D1 (SQLite) + R2 (ფოტოები) — ~₾0/თვე |
-| 9 | Admin auth | ერთი ადმინი: email + password (bcrypt) + session cookie |
+| 9 | Admin auth | ერთი ადმინი: email + password (PBKDF2/WebCrypto — bcrypt არ ჯდება Workers CPU ლიმიტში) + session cookie |
 | 10 | დიზაინი | Clean tech minimal (tokens ქვემოთ) |
 | 11 | Harness | czaba-project-ის `.claude/` სისტემის ადაპტაცია (შემცირებული) |
 
@@ -125,3 +125,4 @@ Key: `GEMINI_API_KEY` — ლოკალურად `.env`-ში (gitignored)
    + „Tesla parts" როგორც აღწერა). გადაწყვეტს მფლობელი deploy-მდე.
 2. **ბრენდის ვიზუალები** (ლოგო, hero) — გენერაცია Higgsfield-ით (subscription არსებობს).
 3. საწყისი კატეგორიების სია და პირველი ~20 პროდუქტის მონაცემები.
+4. **Production admin user** — deploy-ზე ცალკე provisioning ახალი პაროლით (dev seed credential მხოლოდ ლოკალურია).

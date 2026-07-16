@@ -101,8 +101,9 @@ Scopes: `store`, `admin`, `db`, `design`, `infra`
 ## Environment
 
 ```
-# ლოკალურად .env (gitignored), production: wrangler secret put
+# ლოკალურად .dev.vars (gitignored), production: wrangler secret put
 GEMINI_API_KEY=
+SESSION_SECRET=
 
 # wrangler.jsonc bindings
 DB   — D1 database

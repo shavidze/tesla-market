@@ -61,3 +61,12 @@ export const adminUsers = sqliteTable("admin_users", {
   email: text("email").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
 });
+
+export type Category = typeof categories.$inferSelect;
+export type Product = typeof products.$inferSelect;
+export type NewProduct = typeof products.$inferInsert;
+export type ProductPhoto = typeof productPhotos.$inferSelect;
+export type AdminUser = typeof adminUsers.$inferSelect;
+export type TeslaModel = Product["teslaModel"];
+export type Condition = Product["condition"];
+export type ProductStatus = Product["status"];

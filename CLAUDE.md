@@ -71,12 +71,23 @@ Agent-ის კოდის შემდეგ ყოველთვის: bui
 
 Multi-agent dispatch — მხოლოდ ნამდვილად პარალელური სამუშაოსთვის.
 
+## დიზაინის ფილოსოფია — „ნაკლები, მაგრამ უკეთესი"
+
+ნორმატიული დოკუმენტი: [`docs/design-philosophy.md`](docs/design-philosophy.md) —
+Dieter Rams-ის 10 პრინციპი + Arnault-ის „პროდუქტი გმირია". **ორმხრივი gate:**
+
+1. **დაწყებისას** — UI იმპლემენტაციამდე გაუშვი `design-philosophy` skill (3 კითხვა: პრინციპი / წაშლა / გმირი)
+2. **დასრულებისას** — `design-guardian` agent სავალდებულოა; blocker ისწორება commit-ამდე
+3. hooks ავტომატურად ახსენებენ ორივეს (PostToolUse UI ფაილებზე + Stop check)
+
 ## Skills / Hooks
 
 - **`pre-flight`** — კოდამდე checklist (>30 ხაზი ან ახალი ფაილი)
+- **`design-philosophy`** — UI სამუშაოს დაწყების gate (ფილოსოფიის შემოწმება)
 - **`docs-edit`** — markdown-ის რედაქტირება chat-ში
 - **`pre-push-verify.mjs`** — push-ის წინ typecheck + build (exit 2 ბლოკავს)
-- **`check-uncommitted.mjs`** — სესიის ბოლოს uncommitted warning
+- **`design-gate.mjs`** — PreToolUse (Edit|Write): სესიაში პირველ UI edit-ს **ბლოკავს** (exit 2) ფილოსოფიის gate-ის გავლამდე; retry გატარდება (block-once, czaba-ს inject-primitives პატერნი)
+- **`check-uncommitted.mjs`** + **`design-finish-check.mjs`** — სესიის ბოლოს uncommitted/დაუდიტებელი UI warning
 
 ## კომიტის ფორმატი
 

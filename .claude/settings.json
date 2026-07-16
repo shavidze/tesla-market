@@ -58,13 +58,20 @@
         "hooks": [
           { "type": "command", "command": "node .claude/hooks/pre-push-verify.mjs" }
         ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          { "type": "command", "command": "node .claude/hooks/design-gate.mjs" }
+        ]
       }
     ],
     "Stop": [
       {
         "matcher": "",
         "hooks": [
-          { "type": "command", "command": "node .claude/hooks/check-uncommitted.mjs" }
+          { "type": "command", "command": "node .claude/hooks/check-uncommitted.mjs" },
+          { "type": "command", "command": "node .claude/hooks/design-finish-check.mjs" }
         ]
       }
     ]

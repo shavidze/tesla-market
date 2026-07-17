@@ -81,7 +81,7 @@ export default function Catalog({ loaderData }: Route.ComponentProps) {
 					defaultValue={filters.condition}
 					className={`${inputClass} sm:w-auto sm:min-w-36`}
 				>
-					<option value="">მდგომარეობა</option>
+					<option value="">ყველა მდგომარეობა</option>
 					{Object.entries(CONDITION_LABELS).map(([value, label]) => (
 						<option key={value} value={value}>
 							{label}

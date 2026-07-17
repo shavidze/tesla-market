@@ -36,8 +36,8 @@ export async function loader({ context }: Route.LoaderArgs) {
 export default function Home({ loaderData }: Route.ComponentProps) {
 	const { categories, latest } = loaderData;
 	return (
-		<div className="mx-auto max-w-6xl px-4">
-			<section className="grid items-center gap-8 py-12 md:grid-cols-2 md:py-16">
+		<div>
+			<section className="mx-auto grid max-w-6xl items-center gap-8 px-4 py-12 md:grid-cols-2 md:py-16">
 				<div>
 					<h1 className="max-w-2xl text-4xl font-bold tracking-tight text-ink md:text-5xl">
 						Tesla-ს ნაწილები
@@ -58,22 +58,24 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 				/>
 			</section>
 
-			<section className="py-12 md:py-16">
-				<p className={microLabelClass}>კატეგორიები</p>
-				<div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
-					{categories.map((category) => (
-						<Link
-							key={category.id}
-							to={`/catalog?category=${category.slug}`}
-							className="flex min-h-11 items-center justify-center rounded-card border border-line bg-white py-6 text-center font-medium text-ink transition-colors hover:border-ink"
-						>
-							{category.nameKa}
-						</Link>
-					))}
+			<section className="bg-bg">
+				<div className="mx-auto max-w-6xl px-4 py-12 md:py-16">
+					<p className={microLabelClass}>კატეგორიები</p>
+					<div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
+						{categories.map((category) => (
+							<Link
+								key={category.id}
+								to={`/catalog?category=${category.slug}`}
+								className="flex min-h-11 items-center justify-center rounded-card border border-line bg-white py-6 text-center font-medium text-ink transition-colors hover:border-ink"
+							>
+								{category.nameKa}
+							</Link>
+						))}
+					</div>
 				</div>
 			</section>
 
-			<section className="py-12 md:py-16">
+			<section className="mx-auto max-w-6xl px-4 py-12 md:py-16">
 				<p className={microLabelClass}>ბოლოს დამატებული</p>
 				{latest.length > 0 ? (
 					<div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">

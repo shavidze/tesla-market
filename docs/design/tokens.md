@@ -7,7 +7,7 @@
 
 | Token | მნიშვნელობა | Tailwind utility | გამოყენება |
 |---|---|---|---|
-| `--color-bg` | `#FAFAFA` | `bg-bg` | გვერდის ფონი; ფოტო-placeholder-ის ფონი |
+| `--color-bg` | `#F5F5F7` | `bg-bg` | მონაცვლე სექციის (ბანდის) ფონი; ფოტო-placeholder-ის ფონი. გვერდის ბაზისი — `white` |
 | `--color-ink` | `#171717` | `text-ink`, `bg-ink`, `outline-ink`, `border-ink` | ძირითადი ტექსტი; primary ღილაკი; კონტრასტული ბლოკი; focus/hover საზღვრები |
 | `--color-ink-muted` | `#737373` | `text-ink-muted` | მეორადი ტექსტი, მიკრო-ლეიბლები, აღწერები |
 | `--color-accent` | `#E10600` | `text-accent`, `bg-accent` | **მხოლოდ**: ფასი (text) + დარეკვის CTA (bg). მესამე გამოყენება არ არსებობს |

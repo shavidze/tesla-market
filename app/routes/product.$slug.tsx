@@ -49,7 +49,7 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
 		<div className="mx-auto max-w-6xl px-4 py-12 md:py-16">
 			<div className="md:grid md:grid-cols-5 md:gap-8 lg:gap-12">
 				<div className="md:col-span-3">
-					<div className="aspect-square w-full overflow-hidden rounded-card border border-line bg-white">
+					<div className="aspect-square w-full overflow-hidden rounded-card border border-line bg-bg">
 						{mainPhoto ? (
 							<img
 								src={`/photo/${mainPhoto.id}`}
@@ -67,7 +67,7 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
 							{restPhotos.map((photo) => (
 								<div
 									key={photo.id}
-									className="aspect-square overflow-hidden rounded-card border border-line bg-white transition-colors hover:border-ink"
+									className="aspect-square overflow-hidden rounded-card border border-line bg-bg transition-colors hover:border-ink"
 								>
 									<img
 										src={`/photo/${photo.id}`}

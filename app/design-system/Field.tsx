@@ -3,6 +3,8 @@ import type { AriaAttributes, ReactElement } from "react";
 
 export const inputClass =
 	"h-11 w-full rounded-card border border-line bg-white px-3 text-ink focus:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink";
+export const selectClass =
+	"select-chevron h-11 w-full cursor-pointer rounded-card border border-line bg-white px-3 text-ink focus:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink";
 export const textareaClass =
 	"w-full rounded-card border border-line bg-white px-3 py-2 text-ink focus:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink";
 

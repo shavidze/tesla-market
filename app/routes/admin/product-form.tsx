@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Form } from "react-router";
 import type { Category, Condition, ProductPhoto, ProductStatus, TeslaModel } from "../../../db/schema";
 import { Button, buttonClass } from "~/design-system/Button";
-import { Field, inputClass, textareaClass } from "~/design-system/Field";
+import { Field, inputClass, selectClass, textareaClass } from "~/design-system/Field";
 import {
 	CONDITION_LABELS,
 	MODEL_LABELS,
@@ -200,7 +200,7 @@ export function ProductForm({
 						id="categoryId"
 						name="categoryId"
 						defaultValue={defaultValues.categoryId}
-						className={inputClass}
+						className={selectClass}
 					>
 						<option value="">აირჩიეთ</option>
 						{categories.map((category) => (
@@ -215,7 +215,7 @@ export function ProductForm({
 						id="teslaModel"
 						name="teslaModel"
 						defaultValue={defaultValues.teslaModel}
-						className={inputClass}
+						className={selectClass}
 					>
 						<option value="">აირჩიეთ</option>
 						{Object.entries(MODEL_LABELS).map(([value, label]) => (
@@ -250,7 +250,7 @@ export function ProductForm({
 						id="condition"
 						name="condition"
 						defaultValue={defaultValues.condition}
-						className={inputClass}
+						className={selectClass}
 					>
 						<option value="">აირჩიეთ</option>
 						{Object.entries(CONDITION_LABELS).map(([value, label]) => (
@@ -294,7 +294,7 @@ export function ProductForm({
 						id="status"
 						name="status"
 						defaultValue={defaultValues.status}
-						className={inputClass}
+						className={selectClass}
 					>
 						{Object.entries(STATUS_LABELS).map(([value, label]) => (
 							<option key={value} value={value}>

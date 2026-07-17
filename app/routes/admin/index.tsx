@@ -2,7 +2,7 @@ import { Form, Link } from "react-router";
 import type { Route } from "./+types/index";
 import { getDb } from "~/services/db";
 import { requireAdmin } from "~/services/auth.server";
-import { inputClass } from "~/design-system/Field";
+import { selectClass } from "~/design-system/Field";
 import { CONDITION_LABELS, MODEL_LABELS, STATUS_LABELS, formatPrice, isProductStatus } from "~/services/format";
 import { listAllProductsForAdmin, setProductStatus } from "~/services/products.server";
 
@@ -71,7 +71,7 @@ export default function AdminProductsIndex({ loaderData }: Route.ComponentProps)
 												name="status"
 												defaultValue={item.status}
 												aria-label="სტატუსი"
-												className={inputClass}
+												className={selectClass}
 												onChange={(event) => event.currentTarget.form?.requestSubmit()}
 											>
 												{Object.entries(STATUS_LABELS).map(([value, label]) => (

@@ -18,6 +18,7 @@
 
 Label + კონტროლი + შეცდომა, ერთიანი a11y-ით:
 - `inputClass` / `textareaClass` — `h-11 rounded-card border-line bg-white` + focus წესები (tokens.md).
+- `selectClass` — ყველა `<select>`-ისთვის: `inputClass`-ის იდენტური იერი + `select-chevron` (custom ისარი `app.css`-იდან, appearance-none, ink-muted ფერის SVG). Native select რჩება (a11y/mobile) — მხოლოდ დახურული მდგომარეობა იბრენდება; გახსნილი სია OS-ისაა.
 - შეცდომისას `Field`-ს გადაეცემა `error` prop → input იღებს `aria-invalid`, `aria-describedby`, `border-ink`; ქვემოთ `<p role="alert" class="text-sm font-medium text-ink">`.
 - წესი: ველისკენ მიმართული შეცდომა ყოველთვის ველზეა (per-field), საერთო alert მხოლოდ მაშინ, როცა ბრალი ველზე ვერ ლოკალიზდება (login).
 

@@ -1,7 +1,7 @@
 import { Form } from "react-router";
 import type { Route } from "./+types/catalog";
 import { buttonClass } from "~/design-system/Button";
-import { inputClass } from "~/design-system/Field";
+import { inputClass, selectClass } from "~/design-system/Field";
 import { ProductCard } from "~/design-system/ProductCard";
 import { getDb } from "~/services/db";
 import { CONDITION_LABELS, MODEL_LABELS } from "~/services/format";
@@ -57,7 +57,7 @@ export default function Catalog({ loaderData }: Route.ComponentProps) {
             <select
               name="model"
               defaultValue={filters.model}
-              className={`${inputClass} sm:w-auto sm:min-w-36`}
+              className={`${selectClass} sm:w-auto sm:min-w-36`}
             >
               <option value="">ყველა მოდელი</option>
               {Object.entries(MODEL_LABELS).map(([value, label]) => (
@@ -69,7 +69,7 @@ export default function Catalog({ loaderData }: Route.ComponentProps) {
             <select
               name="category"
               defaultValue={filters.category}
-              className={`${inputClass} sm:w-auto sm:min-w-36`}
+              className={`${selectClass} sm:w-auto sm:min-w-36`}
             >
               <option value="">ყველა კატეგორია</option>
               {categories.map((category) => (
@@ -81,7 +81,7 @@ export default function Catalog({ loaderData }: Route.ComponentProps) {
             <select
               name="condition"
               defaultValue={filters.condition}
-              className={`${inputClass} sm:w-auto sm:min-w-36`}
+              className={`${selectClass} sm:w-auto sm:min-w-36`}
             >
               <option value="">ყველა მდგომარეობა</option>
               {Object.entries(CONDITION_LABELS).map(([value, label]) => (

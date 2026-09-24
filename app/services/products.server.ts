@@ -1,4 +1,4 @@
-import { and, desc, eq, inArray, like, or } from "drizzle-orm";
+import { and, count, desc, eq, inArray, like, or } from "drizzle-orm";
 import { categories, productPhotos, products } from "../../db/schema";
 import type {
 	Category,
@@ -46,6 +46,13 @@ export async function listCategories(db: Db): Promise<Category[]> {
 	return db.select().from(categories).orderBy(categories.sortOrder);
 }
 
+export async function countActiveProductsByModel(db: Db) {
+	return db.select({ model: products.teslaModel, total: count() })
+		.from(products)
+		.where(eq(products.status, "active"))
+		.groupBy(products.teslaModel);
+}
+
 export async function getCategoryBySlug(
 	db: Db,
 	slug: string,
@@ -60,16 +67,17 @@ async function attachPrimaryPhotos(
 ): Promise<ProductCardData[]> {
 	if (items.length === 0) return [];
 	const ids = items.map((item) => item.id);
-	const photos = await db
-		.select()
-		.from(productPhotos)
-		.where(inArray(productPhotos.productId, ids))
-		.orderBy(productPhotos.sortOrder);
-
 	const photoMap = new Map<number, number>();
-	for (const photo of photos) {
-		if (!photoMap.has(photo.productId)) {
-			photoMap.set(photo.productId, photo.id);
+	for (let offset = 0; offset < ids.length; offset += 100) {
+		const photos = await db
+			.select()
+			.from(productPhotos)
+			.where(inArray(productPhotos.productId, ids.slice(offset, offset + 100)))
+			.orderBy(productPhotos.sortOrder);
+		for (const photo of photos) {
+			if (!photoMap.has(photo.productId)) {
+				photoMap.set(photo.productId, photo.id);
+			}
 		}
 	}
 
@@ -116,8 +124,9 @@ export async function listProducts(
 	return attachPrimaryPhotos(db, items);
 }
 
-export async function listAllProductsForAdmin(db: Db): Promise<Product[]> {
-	return db.select().from(products).orderBy(desc(products.createdAt));
+export async function listAllProductsForAdmin(db: Db): Promise<ProductCardData[]> {
+	const items = await db.select().from(products).orderBy(desc(products.createdAt));
+	return attachPrimaryPhotos(db, items);
 }
 
 async function withPhotos(

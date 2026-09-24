@@ -2,6 +2,11 @@
 	"$schema": "./node_modules/wrangler/config-schema.json",
 	"name": "teslamarket",
 	"main": "./workers/app.ts",
+	"workers_dev": true,
+	"routes": [
+		{ "pattern": "teslamarket.ge", "custom_domain": true },
+		{ "pattern": "www.teslamarket.ge", "custom_domain": true }
+	],
 	"compatibility_date": "2025-10-08",
 	"compatibility_flags": ["nodejs_compat"],
 	"observability": {

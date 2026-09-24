@@ -29,14 +29,15 @@ export function ProductCard({ product }: { product: ProductCardData }) {
 	return (
 		<Link
 			to={`/p/${product.slug}`}
-			className="flex flex-col overflow-hidden rounded-card border border-line bg-white transition-colors hover:border-ink"
+			className="flex flex-col overflow-hidden rounded-card border border-line bg-white transition-colors hover:border-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink"
 		>
 			<div className="aspect-square w-full bg-bg">
 				{product.primaryPhotoId ? (
 					<img
 						src={`/photo/${product.primaryPhotoId}`}
 						alt={product.titleKa}
-						className="h-full w-full object-cover"
+						className="h-full w-full object-contain"
+						loading="lazy"
 					/>
 				) : (
 					<div className={`flex h-full w-full items-center justify-center bg-bg text-center ${microLabelClass}`}>

@@ -161,6 +161,9 @@ export function ProductForm({
 	const [slugTouched, setSlugTouched] = useState(mode === "edit");
 	const [slug, setSlug] = useState(defaultValues.slug);
 	const [description, setDescription] = useState(defaultValues.descriptionKa);
+	const [yearFrom, setYearFrom] = useState(defaultValues.yearFrom);
+	const [yearTo, setYearTo] = useState(defaultValues.yearTo);
+	const [oemNumber, setOemNumber] = useState(defaultValues.oemNumber);
 
 	useEffect(() => {
 		if (generatedDescription) {
@@ -170,6 +173,11 @@ export function ProductForm({
 
 	return (
 		<div className="flex flex-col gap-10">
+			<div className="rounded-card border border-line p-4 text-sm text-ink-muted">
+				<p>გამოქვეყნებამდე გადაამოწმე ფასი, რაოდენობა და ნაწილის მდგომარეობა. ნულოვანი რაოდენობა სტატუსს ავტომატურად არ ცვლის.</p>
+				{!photos?.length && <p className="mt-2">ფოტო ჯერ არ არის. {mode === "create" ? "შეინახე ნაწილი და შემდეგ ატვირთე მისი ნამდვილი ფოტოები რედაქტირების გვერდზე." : "დაამატე ნაწილის ნამდვილი ფოტოები ქვემოთ."}</p>}
+				{(!yearFrom.trim() || !oemNumber.trim()) && <p className="mt-2">თავსებადობის მონაცემები არასრულია: შეავსე შესაბამისი წლები და OEM ნომერი, თუ ცნობილია. უცნობი ინფორმაცია არ გამოიგონო.</p>}
+			</div>
 			<Form method="post" className="flex flex-col gap-4">
 				<input type="hidden" name="intent" value="save" />
 				<Field label="სათაური" htmlFor="titleKa" error={errors?.titleKa}>
@@ -181,18 +189,6 @@ export function ProductForm({
 						onChange={(event) => {
 							if (!slugTouched) setSlug(slugify(event.target.value));
 						}}
-					/>
-				</Field>
-				<Field label="სლაგი" htmlFor="slug" error={errors?.slug}>
-					<input
-						id="slug"
-						name="slug"
-						value={slug}
-						onChange={(event) => {
-							setSlugTouched(true);
-							setSlug(event.target.value);
-						}}
-						className={inputClass}
 					/>
 				</Field>
 				<Field label="კატეგორია" htmlFor="categoryId" error={errors?.categoryId}>
@@ -225,26 +221,6 @@ export function ProductForm({
 						))}
 					</select>
 				</Field>
-				<div className="grid grid-cols-2 gap-4">
-					<Field label="წელი (დან)" htmlFor="yearFrom" error={errors?.yearFrom}>
-						<input
-							id="yearFrom"
-							name="yearFrom"
-							type="number"
-							defaultValue={defaultValues.yearFrom}
-							className={inputClass}
-						/>
-					</Field>
-					<Field label="წელი (მდე)" htmlFor="yearTo" error={errors?.yearTo}>
-						<input
-							id="yearTo"
-							name="yearTo"
-							type="number"
-							defaultValue={defaultValues.yearTo}
-							className={inputClass}
-						/>
-					</Field>
-				</div>
 				<Field label="მდგომარეობა" htmlFor="condition" error={errors?.condition}>
 					<select
 						id="condition"
@@ -281,14 +257,6 @@ export function ProductForm({
 						/>
 					</Field>
 				</div>
-				<Field label="OEM ნომერი" htmlFor="oemNumber">
-					<input
-						id="oemNumber"
-						name="oemNumber"
-						defaultValue={defaultValues.oemNumber}
-						className={inputClass}
-					/>
-				</Field>
 				<Field label="სტატუსი" htmlFor="status" error={errors?.status}>
 					<select
 						id="status"
@@ -303,6 +271,37 @@ export function ProductForm({
 						))}
 					</select>
 				</Field>
+				<div className="grid grid-cols-2 gap-4">
+					<Field label="წელი (დან)" htmlFor="yearFrom" error={errors?.yearFrom}>
+						<input
+							id="yearFrom"
+							name="yearFrom"
+							type="number"
+							value={yearFrom}
+							onChange={(event) => setYearFrom(event.target.value)}
+							className={inputClass}
+						/>
+					</Field>
+					<Field label="წელი (მდე)" htmlFor="yearTo" error={errors?.yearTo}>
+						<input
+							id="yearTo"
+							name="yearTo"
+							type="number"
+							value={yearTo}
+							onChange={(event) => setYearTo(event.target.value)}
+							className={inputClass}
+						/>
+					</Field>
+				</div>
+				<Field label="OEM ნომერი" htmlFor="oemNumber">
+					<input
+						id="oemNumber"
+						name="oemNumber"
+						value={oemNumber}
+						onChange={(event) => setOemNumber(event.target.value)}
+						className={inputClass}
+					/>
+				</Field>
 				<Field label="აღწერა" htmlFor="descriptionKa">
 					<textarea
 						id="descriptionKa"
@@ -313,6 +312,22 @@ export function ProductForm({
 						className={textareaClass}
 					/>
 				</Field>
+				<details open={Boolean(errors?.slug)} className="rounded-card border border-line p-4">
+					<summary className="list-item min-h-11 list-inside cursor-pointer py-3 font-medium text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink">გვერდის მისამართი (არასავალდებულო ცვლილება)</summary>
+					<p className="mb-3 text-sm text-ink-muted">მისამართი სათაურიდან ავტომატურად იქმნება. არსებულის შეცვლისას ძველი ბმული აღარ იმუშავებს.</p>
+					<Field label="სლაგი" htmlFor="slug" error={errors?.slug}>
+						<input
+							id="slug"
+							name="slug"
+							value={slug}
+							onChange={(event) => {
+								setSlugTouched(true);
+								setSlug(event.target.value);
+							}}
+							className={inputClass}
+						/>
+					</Field>
+				</details>
 				<Button type="submit">შენახვა</Button>
 			</Form>
 

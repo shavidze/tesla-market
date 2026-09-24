@@ -4,14 +4,30 @@ import { microLabelClass } from "~/design-system/Label";
 import { getDb } from "~/services/db";
 import { telHref } from "~/services/format";
 import { getSettings } from "~/services/settings.server";
+import { pageMeta, SITE_URL } from "~/services/seo";
 
-export function meta(_: Route.MetaArgs) {
+const MAP_URL = "https://maps.app.goo.gl/DHXSqmteWNJiuccc8";
+
+export function meta({ data }: Route.MetaArgs) {
 	return [
-		{ title: "კონტაქტი — TeslaMarket" },
-		{
-			name: "description",
-			content: "TeslaMarket-ის საკონტაქტო ინფორმაცია — ტელეფონი და მისამართი რუსთავში.",
-		},
+		...pageMeta({
+			title: "Tesla-ს ნაწილების მაღაზია რუსთავში — კონტაქტი | TeslaMarket",
+			description: "TeslaMarket-ის საკონტაქტო ინფორმაცია — ტელეფონი, მისამართი და სამუშაო საათები. Tesla-ს ნაწილების მაღაზია რუსთავში.",
+			path: "/contact",
+		}),
+		...(data ? [{
+			"script:ld+json": {
+				"@context": "https://schema.org",
+				"@type": "AutoPartsStore",
+				"@id": `${SITE_URL}/#store`,
+				name: "TeslaMarket",
+				url: SITE_URL,
+				image: `${SITE_URL}/og.png`,
+				telephone: data.siteSettings.phone,
+				address: data.siteSettings.address,
+				hasMap: MAP_URL,
+			},
+		}] : []),
 	];
 }
 
@@ -45,12 +61,22 @@ export default function Contact({ loaderData }: Route.ComponentProps) {
 				</div>
 			</div>
 
-			<a
-				href={telHref(siteSettings.phone)}
-				className={buttonClass("cta", "mt-8 h-12 w-full text-base sm:w-auto")}
-			>
-				დარეკვა
-			</a>
+			<div className="mt-8 flex flex-col gap-3 sm:flex-row">
+				<a
+					href={telHref(siteSettings.phone)}
+					className={buttonClass("cta", "h-12 w-full text-base sm:w-auto")}
+				>
+					დარეკვა
+				</a>
+				<a
+					href={MAP_URL}
+					target="_blank"
+					rel="noopener noreferrer"
+					className={buttonClass("secondary", "h-12 w-full text-base sm:w-auto")}
+				>
+					რუკაზე ნახვა
+				</a>
+			</div>
 		</div>
 	);
 }

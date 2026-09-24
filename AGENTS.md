@@ -1,3 +1,7 @@
+# TeslaMarket — Codex
+
+ნებისმიერი სამუშაოს დაწყებამდე წაიკითხე [Codex ინსტრუქციები](.Codex/AGENTS.md), შემდეგ შესაბამისი rules, primitives, agents და skills. პროექტის საერთო კონვენციების წყაროა [CLAUDE.md](CLAUDE.md), scope-ის — [PLAN.md](PLAN.md). Codex-ისთვის მათი გამოყენების განსხვავებები აღწერილია `.Codex/AGENTS.md`-ში.
+
 # Cloudflare Workers
 
 STOP. Your knowledge of Cloudflare Workers APIs and limits may be outdated. Always retrieve current documentation before any Workers, KV, R2, D1, Durable Objects, Queues, Vectorize, AI, or Agents SDK task.

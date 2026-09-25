@@ -1,0 +1,38 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node 'C:\\Apps\\teslamarket\\.codex\\hooks\\pre-push-verify.mjs'"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node 'C:\\Apps\\teslamarket\\.codex\\hooks\\design-gate.mjs'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node 'C:\\Apps\\teslamarket\\.codex\\hooks\\check-uncommitted.mjs'"
+          },
+          {
+            "type": "command",
+            "command": "node 'C:\\Apps\\teslamarket\\.codex\\hooks\\design-finish-check.mjs'"
+          }
+        ]
+      }
+    ]
+  }
+}

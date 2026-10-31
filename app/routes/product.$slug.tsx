@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Route } from "./+types/product.$slug";
 import { buttonClass } from "~/design-system/Button";
 import { microLabelClass } from "~/design-system/Label";
+import { codeClass, specHeadClass, specPanelClass, specRowClass, specTermClass, specValueClass } from "~/design-system/Spec";
 import { getDb } from "~/services/db";
 import { CONDITION_LABELS, MODEL_LABELS, formatPrice, telHref } from "~/services/format";
 import { getProductBySlug } from "~/services/products.server";
@@ -79,13 +80,13 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
 		<div className="mx-auto max-w-6xl px-4 py-12 md:py-16">
 			<div className="md:grid md:grid-cols-5 md:gap-8 lg:gap-12">
 				<div className="md:col-span-3">
-					<div className="aspect-square w-full overflow-hidden rounded-card border border-line bg-bg">
+					<div className={`aspect-square w-full overflow-hidden rounded-card border border-line ${mainPhoto ? "bg-white" : "bg-bg"}`}>
 						{mainPhoto ? (
 							<a href={`/photo/${mainPhoto.id}`} target="_blank" rel="noopener noreferrer" aria-label="ფოტოს სრული ზომით გახსნა — ახალი ჩანართი" className="block h-full w-full focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ink">
 								<img
 									src={`/photo/${mainPhoto.id}`}
 									alt={product.titleKa}
-									className="h-full w-full object-contain"
+									className="h-full w-full object-contain p-4 md:p-8"
 								/>
 							</a>
 						) : (
@@ -104,7 +105,7 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
 									aria-label={`ფოტო ${index + 1}`}
 									aria-pressed={mainPhoto?.id === photo.id}
 									onClick={() => setSelectedPhotoId(photo.id)}
-									className={`aspect-square min-h-11 overflow-hidden rounded-card border bg-bg transition-colors hover:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink ${mainPhoto?.id === photo.id ? "border-ink" : "border-line"}`}
+									className={`aspect-square min-h-11 overflow-hidden rounded-card border bg-white p-1 transition-colors hover:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink ${mainPhoto?.id === photo.id ? "border-ink" : "border-line"}`}
 								>
 									<img
 										src={`/photo/${photo.id}`}
@@ -119,38 +120,43 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
 
 				<div className="contents md:col-span-2 md:block">
 					<p className={`mt-8 md:mt-0 ${microLabelClass}`}>{product.categoryName}</p>
-					<h1 className="mt-2 text-3xl font-bold leading-tight tracking-tight text-ink">
+					<h1 className="mt-2 text-2xl font-bold leading-tight tracking-tight text-ink md:text-3xl">
 						{product.titleKa}
 					</h1>
-					<p className="mt-2 text-sm text-ink-muted">ნაწილის კოდი: {product.id}</p>
 
-					<div className="mt-6">
-						<div className="flex justify-between gap-4 border-b border-line py-3">
-							<span className="text-sm text-ink-muted">მოდელი</span>
-							<span className="text-sm font-medium text-ink">
-								{MODEL_LABELS[product.teslaModel]}
-							</span>
+					<section aria-labelledby="part-card-heading" className={`mt-6 ${specPanelClass}`}>
+						<div className={specHeadClass}>
+							<h2 id="part-card-heading" className={microLabelClass}>ნაწილის ბარათი</h2>
+							<span className={codeClass}>№ {product.id}</span>
 						</div>
-						<div className="flex justify-between gap-4 border-b border-line py-3">
-							<span className="text-sm text-ink-muted">წლები</span>
-							<span className="text-right text-sm font-medium text-ink">{years}</span>
-						</div>
-						<div className="flex justify-between border-b border-line py-3">
-							<span className="text-sm text-ink-muted">მდგომარეობა</span>
-							<span className="text-sm font-medium text-ink">
-								{CONDITION_LABELS[product.condition]}
-							</span>
-						</div>
-						{product.oemNumber && (
-							<div className="flex justify-between gap-4 border-b border-line py-3">
-								<span className="text-sm text-ink-muted">OEM</span>
-								<span className="min-w-0 break-all text-right text-sm font-medium text-ink">{product.oemNumber}</span>
+						<dl className="px-4">
+							<div className={specRowClass}>
+								<dt className={specTermClass}>მოდელი</dt>
+								<dd className={specValueClass}>{MODEL_LABELS[product.teslaModel]}</dd>
 							</div>
-						)}
-					</div>
+							<div className={specRowClass}>
+								<dt className={specTermClass}>წლები</dt>
+								<dd className={`${specValueClass} tabular-nums`}>{years}</dd>
+							</div>
+							<div className={specRowClass}>
+								<dt className={specTermClass}>მდგომარეობა</dt>
+								<dd className={specValueClass}>{CONDITION_LABELS[product.condition]}</dd>
+							</div>
+							{product.oemNumber && (
+								<div className={specRowClass}>
+									<dt className={specTermClass}>OEM</dt>
+									<dd className={`min-w-0 break-all text-right ${codeClass}`}>{product.oemNumber}</dd>
+								</div>
+							)}
+						</dl>
+					</section>
 
 					<p className="mt-6 text-3xl font-bold text-accent">{formatPrice(product.priceTetri)}</p>
-					<p className="mt-3 text-sm text-ink-muted">თავსებადობა დააზუსტე დარეკვით. მიუთითე ნაწილის კოდი ან OEM ნომერი.</p>
+					<p className="mt-3 text-sm text-ink-muted">
+						{product.oemNumber
+							? `დარეკვისას მიუთითე ნაწილის № ${product.id} ან OEM ნომერი — თავსებადობას ტელეფონზე დაგიზუსტებთ.`
+							: `დარეკვისას მიუთითე ნაწილის № ${product.id} — თავსებადობას ტელეფონზე დაგიზუსტებთ.`}
+					</p>
 					<div className="sticky bottom-0 z-10 -mx-4 mt-4 border-t border-line bg-white px-4 py-3 md:static md:mx-0 md:border-0 md:bg-transparent md:p-0">
 						<a href={callHref} className={buttonClass("cta", "h-12 w-full text-base")}>
 							დარეკვა

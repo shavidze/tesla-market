@@ -31,7 +31,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
 			to={`/p/${product.slug}`}
 			className="flex flex-col overflow-hidden rounded-card border border-line bg-white transition-colors hover:border-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink"
 		>
-			<div className="aspect-square w-full bg-bg">
+			<div className={product.primaryPhotoId ? "aspect-square w-full border-b border-line bg-white p-3 md:p-4" : "aspect-square w-full border-b border-line bg-bg"}>
 				{product.primaryPhotoId ? (
 					<img
 						src={`/photo/${product.primaryPhotoId}`}
@@ -46,7 +46,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
 				)}
 			</div>
 			<div className="flex flex-1 flex-col p-4">
-				<p className={microLabelClass}>
+				<p className={`tabular-nums ${microLabelClass}`}>
 					{meta.map((part, index) => (
 						<Fragment key={part}>
 							{index > 0 && " · "}
@@ -54,7 +54,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
 						</Fragment>
 					))}
 				</p>
-				<h3 className="mt-1 line-clamp-4 text-sm md:line-clamp-3 font-medium leading-snug text-ink">
+				<h3 className="mt-1 line-clamp-4 text-sm font-medium md:line-clamp-3 leading-snug text-ink">
 					{product.titleKa}
 				</h3>
 				<p className="mt-3 text-lg font-bold text-accent">{formatPrice(product.priceTetri)}</p>

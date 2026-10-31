@@ -1,11 +1,13 @@
-import { Link } from "react-router";
+import { Link, useRouteLoaderData } from "react-router";
 import type { Route } from "./+types/home";
+import type { loader as storeLoader } from "./_store";
 import { buttonClass } from "~/design-system/Button";
 import { microLabelClass } from "~/design-system/Label";
+import { specHeadClass, specPanelClass, specRowClass, specTermClass, specValueClass } from "~/design-system/Spec";
 import { ProductCard } from "~/design-system/ProductCard";
 import { getDb } from "~/services/db";
 import { countActiveProductsByModel, listCategories, listProducts } from "~/services/products.server";
-import { MODEL_LABELS } from "~/services/format";
+import { MODEL_LABELS, telHref } from "~/services/format";
 import { pageMeta, SITE_URL } from "~/services/seo";
 
 export function meta(_: Route.MetaArgs) {
@@ -42,9 +44,11 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 		.map((model) => ({ model, total: modelCounts.find((item) => item.model === model)?.total ?? 0 }))
 		.filter((item) => item.total > 0);
 	const universalCount = modelCounts.find((item) => item.model === "universal")?.total ?? 0;
+	const total = modelCounts.reduce((sum, item) => sum + item.total, 0);
+	const store = useRouteLoaderData<typeof storeLoader>("routes/_store");
 	return (
 		<div>
-			<section className="mx-auto grid max-w-6xl items-center gap-8 px-4 py-12 md:grid-cols-2 md:py-16">
+			<section className="mx-auto grid max-w-6xl items-start gap-8 px-4 py-12 md:grid-cols-2 md:items-center md:gap-12 md:py-16">
 				<div>
 					<h1 className="max-w-2xl text-4xl font-bold tracking-tight text-ink md:text-5xl">
 						Tesla-ს ნაწილები
@@ -56,18 +60,42 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 						კატალოგის ნახვა
 					</Link>
 				</div>
-				<img
-					src="/hero.png"
-					alt="ავტონაწილების ტექნიკური ნახაზი — მთლიანი ნაწილებისგან იწყობა"
-					className="hidden max-h-96 w-auto justify-self-end md:block lg:max-h-[28rem]"
-					width={896}
-					height={1200}
-				/>
+				{store && (
+					<section aria-labelledby="store-heading" className={specPanelClass}>
+						<div className={specHeadClass}>
+							<h2 id="store-heading" className={microLabelClass}>მაღაზია</h2>
+						</div>
+						<dl className="px-4">
+							<div className={specRowClass}>
+								<dt className={specTermClass}>მისამართი</dt>
+								<dd className={specValueClass}>{store.siteSettings.address}</dd>
+							</div>
+							{store.siteSettings.hours && (
+								<div className={specRowClass}>
+									<dt className={specTermClass}>სამუშაო საათები</dt>
+									<dd className={specValueClass}>{store.siteSettings.hours}</dd>
+								</div>
+							)}
+							<div className="flex items-center justify-between gap-4 border-b border-line">
+								<dt className={specTermClass}>ტელეფონი</dt>
+								<dd>
+									<a href={telHref(store.siteSettings.phone)} className="flex min-h-11 items-center text-sm font-medium tabular-nums text-ink underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink">
+										{store.siteSettings.phone}
+									</a>
+								</dd>
+							</div>
+							<div className={specRowClass}>
+								<dt className={specTermClass}>კატალოგში</dt>
+								<dd className={`${specValueClass} tabular-nums`}>{total} ნაწილი</dd>
+							</div>
+						</dl>
+					</section>
+				)}
 			</section>
 
 			{(models.length > 0 || universalCount > 0) && (
 				<section className="mx-auto max-w-6xl px-4 pb-12 md:pb-16" aria-labelledby="models-heading">
-					<h2 id="models-heading" className="text-2xl font-bold text-ink">აირჩიე შენი მოდელი</h2>
+					<h2 id="models-heading" className="text-xl font-bold text-ink">აირჩიე შენი მოდელი</h2>
 					<p className="mt-2 text-sm text-ink-muted">ნახე თითოეული მოდელისთვის ხელმისაწვდომი ნაწილები.</p>
 					<div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-6">
 						{models.map(({ model, total }) => (

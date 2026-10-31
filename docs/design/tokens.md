@@ -7,7 +7,7 @@
 
 | Token | მნიშვნელობა | Tailwind utility | გამოყენება |
 |---|---|---|---|
-| `--color-bg` | `#F5F5F7` | `bg-bg` | მონაცვლე სექციის (ბანდის) ფონი; ფოტო-placeholder-ის ფონი. გვერდის ბაზისი — `white` |
+| `--color-bg` | `#F5F5F7` | `bg-bg` | მონაცვლე სექციის (ბანდის) ფონი; ფოტო-placeholder-ის ფონი (ფოტოს გარეშე). ფოტოს ჩარჩო — `bg-white`. გვერდის ბაზისი — `white` |
 | `--color-ink` | `#171717` | `text-ink`, `bg-ink`, `outline-ink`, `border-ink` | ძირითადი ტექსტი; primary ღილაკი; კონტრასტული ბლოკი; focus/hover საზღვრები |
 | `--color-ink-muted` | `#737373` | `text-ink-muted` | მეორადი ტექსტი, მიკრო-ლეიბლები, აღწერები |
 | `--color-accent` | `#E10600` | `text-accent`, `bg-accent` | **მხოლოდ**: ფასი (text) + დარეკვის CTA (bg). მესამე გამოყენება არ არსებობს |
@@ -20,17 +20,20 @@
 ## ტიპოგრაფია
 
 **ერთი ოჯახი:** Noto Sans Georgian (self-hosted, `@fontsource`), წონები **400 / 500 / 700**.
+დამატებით: სისტემური `font-mono` (`--font-mono`, ფაილი არ იტვირთება) მხოლოდ იდენტიფიკატორებისთვის — OEM, ნაწილის №. ქართული ტექსტი mono-ში არასდროს.
 `font-semibold` (600) აკრძალულია — არ იტვირთება.
 
 | როლი | კლასები | სად |
 |---|---|---|
 | Hero H1 | `text-4xl md:text-5xl font-bold tracking-tight` | მთავარი |
-| გვერდის H1 | `text-3xl font-bold tracking-tight` | პროდუქტი, კონტაქტი |
+| გვერდის H1 | `text-3xl font-bold tracking-tight` | კონტაქტი |
+| პროდუქტის H1 | `text-2xl md:text-3xl font-bold leading-tight tracking-tight` | პროდუქტი (მობილურზე ფოტოს არ ეჯიბრება) |
 | სიის H1 | `text-2xl font-bold tracking-tight` | კატალოგი, ადმინი |
 | სექციის H2 | `text-xl font-bold` | მთავარი სექციები |
 | დიდი მაჩვენებელი | `text-3xl font-bold` | ტელეფონი კონტაქტზე; ფასი პროდუქტზე (`text-accent`) |
 | ტანი | `text-base` (16px) / `text-sm` (14px) | ტექსტები / ბარათის სათაური, ველები |
-| მიკრო-ლეიბლი | `microLabelClass` = `text-xs font-medium uppercase tracking-[0.15em] text-ink-muted` | სექციები, მეტა, ფუნქციური წარწერები |
+| მიკრო-ლეიბლი | `microLabelClass` = `text-xs font-medium text-ink-muted` (uppercase/tracking-ის გარეშე) | სექციები, მეტა, ფუნქციური წარწერები |
+| კოდი | `codeClass` = `font-mono text-sm text-ink` (`Spec.ts`) | OEM, ნაწილის № |
 | წვრილი | `text-xs` | copyright, დამხმარე |
 
 **წესი:** თვითნებური ზომები (`text-[15px]` და მისთ.) აკრძალულია — მხოლოდ სტანდარტული სკალა.

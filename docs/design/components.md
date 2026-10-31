@@ -30,8 +30,8 @@ Label + კონტროლი + შეცდომა, ერთიანი 
 ## ProductCard — `ProductCard.tsx`
 
 ანატომია (ზემოდან ქვემოთ):
-1. ფოტო: `aspect-square object-cover`; თუ არაა — `bg-bg` + მიკრო-ლეიბლი „ფოტო არ არის"
-2. მეტა-ხაზი (მიკრო-ლეიბლი): `MODEL · წლები · მდგომარეობა` — თითო ნაწილი `whitespace-nowrap` (წლები არ იხლიჩება)
+1. ფოტო: `aspect-square object-contain`, ჩარჩო `bg-white p-3 md:p-4 border-b border-line`; თუ არაა — `bg-bg` + მიკრო-ლეიბლი „ფოტო არ არის"
+2. მეტა-ხაზი (მიკრო-ლეიბლი + `tabular-nums`): `Model 3 · წლები · მდგომარეობა` — თითო ნაწილი `whitespace-nowrap` (წლები არ იხლიჩება)
 3. სათაური: `text-sm font-medium leading-snug line-clamp-4 md:line-clamp-3` (მობილურზე 2 სვეტში მარჯვენა/მარცხენა უნდა ჩანდეს)
 4. ფასი: `text-lg font-bold text-accent`
 
@@ -40,16 +40,18 @@ Label + კონტროლი + შეცდომა, ერთიანი 
 
 ## Header — `Header.tsx`
 
-`h-16 border-b border-line bg-white`. Wordmark: `font-bold tracking-tight text-lg text-ink` (ლოგო-გრაფიკა არ გვაქვს საიტში — ბრენდი ტიპოგრაფიულია). ნავიგაცია: `text-sm text-ink-muted hover:text-ink`, `min-h-11`.
+`h-16 border-b border-line bg-white`. Wordmark: `font-bold tracking-tight text-lg text-ink` (ლოგო-გრაფიკა არ გვაქვს საიტში — ბრენდი ტიპოგრაფიულია). ნავიგაცია: `text-sm text-ink-muted hover:text-ink`, `min-h-11`; მიმდინარე გვერდი `aria-[current=page]:font-medium aria-[current=page]:text-ink`. ≥768px-ზე ბოლოს ტელეფონი (`tel:`, `text-ink font-medium tabular-nums`); მობილურზე არა — იქ sticky „დარეკვა" მუშაობს. Props: `phone`.
 
 ## Footer — `Footer.tsx` (კონტრასტული ბლოკი)
 
-`bg-ink py-12` — გვერდის ერთადერთი მუქი სექცია. 3 სვეტი: wordmark (`text-white`) · კონტაქტი (მიკრო-ლეიბლი `text-white/50` + ტელეფონი `tel:` ლინკით `text-white min-h-11`) · მისამართი. ქვედა ზოლი: `border-t border-white/15` + `© {წელი} TeslaMarket` (`text-white/50 text-xs`). Props: `phone`, `address` — settings-იდან (DB).
+`bg-ink py-12` — გვერდის ერთადერთი მუქი სექცია. 3 სვეტი: wordmark (`text-white`) · კონტაქტი (მიკრო-ლეიბლი `text-white/50` + ტელეფონი `tel:` ლინკით `text-white min-h-11`) · მისამართი. wordmark-ის ქვეშ „იმპორტირებული Tesla-ს ნაწილები · რუსთავი" (`text-sm text-white/50`), მისამართის ქვეშ საათები. ქვედა ზოლი: `border-t border-white/15` + `© {წელი} TeslaMarket` (`text-white/50 text-xs`). Props: `phone`, `address`, `hours` — settings-იდან (DB).
 
 ## პატერნები (კომპონენტებზე მაღლა)
 
-### Definition rows (სპეციფიკაციები)
-`flex justify-between border-b border-line py-3` + label `text-sm text-ink-muted` + value `text-sm font-medium text-ink`. გამოყენება: პროდუქტის სპეცები, კონტაქტის ინფო. ერთი-ერთზე იდენტური კლასები ორივეგან.
+### ბარათის პანელი — `Spec.ts`
+ჩარჩოში ჩასმული definition rows, head-ით. მხოლოდ class-string კონსტანტები (კომპონენტი არ არის — props/ლოგიკა არ სჭირდება):
+`specPanelClass` (`rounded-card border border-line bg-white`) · `specHeadClass` (head: `microLabelClass` სათაური + სურვილისამებრ `№` კოდი) · `<dl className="px-4">` · `specRowClass` (`flex justify-between gap-4 border-b border-line py-3 last:border-b-0`) · `specTermClass` · `specValueClass` · `codeClass` (`font-mono text-sm text-ink`).
+სემანტიკა `<section aria-labelledby>` + `<dl>/<dt>/<dd>`. გამოყენება: ნაწილის ბარათი (პროდუქტი), მაღაზიის ბარათი (მთავარის hero, კონტაქტი). ბმული სტრიქონში (ტელეფონი) — სტრიქონი `py-3`-ის გარეშე, ბმული `min-h-11`. `overflow-hidden` პანელზე/წინაპრებზე არ ემატება (პროდუქტის sticky CTA).
 
 ### ფილტრის ზოლი (კატალოგი)
 `bg-white border border-line rounded-card p-4`; მობილურზე სვეტად (`flex-col`), დესკტოპზე: selects `sm:w-auto sm:min-w-36`, ძებნის ველი `sm:flex-1`, ღილაკი `sm:w-auto`. ცარიელი option ყოველთვის „ყველა …" ფორმით („ყველა მოდელი", „ყველა წელი", „ყველა კატეგორია", „ყველა მდგომარეობა").

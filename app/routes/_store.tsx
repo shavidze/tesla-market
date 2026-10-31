@@ -15,11 +15,11 @@ export default function StoreLayout({ loaderData }: Route.ComponentProps) {
 	const { siteSettings } = loaderData;
 	return (
 		<div className="flex min-h-screen flex-col">
-			<Header />
+			<Header phone={siteSettings.phone} />
 			<main className="flex-1">
 				<Outlet />
 			</main>
-			<Footer phone={siteSettings.phone} address={siteSettings.address} />
+			<Footer phone={siteSettings.phone} address={siteSettings.address} hours={siteSettings.hours} />
 		</div>
 	);
 }

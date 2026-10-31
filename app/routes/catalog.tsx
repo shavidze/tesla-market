@@ -75,9 +75,12 @@ export default function Catalog({ loaderData }: Route.ComponentProps) {
               />
               <button type="submit" className={buttonClass("primary")}>ძებნა</button>
             </div>
-            <details className="mt-2">
-              <summary className="list-item min-h-11 list-inside cursor-pointer py-3 font-medium text-ink underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink">
+            <details className="group mt-2">
+              <summary className="flex min-h-11 w-fit cursor-pointer list-none items-center gap-2 py-3 font-medium text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink [&::-webkit-details-marker]:hidden">
                 ფილტრები{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-ink-muted group-open:rotate-180">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </summary>
               <div className="mt-2 grid gap-3 sm:grid-cols-4">
             <select

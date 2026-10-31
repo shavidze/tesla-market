@@ -1,6 +1,7 @@
 import type { Route } from "./+types/contact";
 import { buttonClass } from "~/design-system/Button";
 import { microLabelClass } from "~/design-system/Label";
+import { specHeadClass, specPanelClass, specRowClass, specTermClass, specValueClass } from "~/design-system/Spec";
 import { getDb } from "~/services/db";
 import { telHref } from "~/services/format";
 import { getSettings } from "~/services/settings.server";
@@ -46,20 +47,27 @@ export default function Contact({ loaderData }: Route.ComponentProps) {
 
 			<a href={telHref(siteSettings.phone)} className="mt-6 flex min-h-11 w-fit items-center text-3xl font-bold text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink">{siteSettings.phone}</a>
 
-			<div className="mt-8">
-				<div className="flex justify-between border-b border-line py-3">
-					<span className="text-sm text-ink-muted">საკონტაქტო პირი</span>
-					<span className="text-sm font-medium text-ink">{siteSettings.contactName}</span>
+			<section aria-labelledby="shop-heading" className={`mt-8 ${specPanelClass}`}>
+				<div className={specHeadClass}>
+					<h2 id="shop-heading" className={microLabelClass}>მაღაზია</h2>
 				</div>
-				<div className="flex justify-between border-b border-line py-3">
-					<span className="text-sm text-ink-muted">მისამართი</span>
-					<span className="text-sm font-medium text-ink">{siteSettings.address}</span>
-				</div>
-				<div className="flex justify-between border-b border-line py-3">
-					<span className="text-sm text-ink-muted">სამუშაო საათები</span>
-					<span className="text-sm font-medium text-ink">{siteSettings.hours}</span>
-				</div>
-			</div>
+				<dl className="px-4">
+					<div className={specRowClass}>
+						<dt className={specTermClass}>საკონტაქტო პირი</dt>
+						<dd className={specValueClass}>{siteSettings.contactName}</dd>
+					</div>
+					<div className={specRowClass}>
+						<dt className={specTermClass}>მისამართი</dt>
+						<dd className={specValueClass}>{siteSettings.address}</dd>
+					</div>
+					{siteSettings.hours && (
+						<div className={specRowClass}>
+							<dt className={specTermClass}>სამუშაო საათები</dt>
+							<dd className={specValueClass}>{siteSettings.hours}</dd>
+						</div>
+					)}
+				</dl>
+			</section>
 
 			<div className="mt-8 flex flex-col gap-3 sm:flex-row">
 				<a

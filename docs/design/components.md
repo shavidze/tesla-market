@@ -31,8 +31,8 @@ Label + კონტროლი + შეცდომა, ერთიანი 
 
 ანატომია (ზემოდან ქვემოთ):
 1. ფოტო: `aspect-square object-cover`; თუ არაა — `bg-bg` + მიკრო-ლეიბლი „ფოტო არ არის"
-2. მეტა-ხაზი (მიკრო-ლეიბლი): `MODEL · წლები · მდგომარეობა`
-3. სათაური: `text-sm font-medium leading-snug line-clamp-2`
+2. მეტა-ხაზი (მიკრო-ლეიბლი): `MODEL · წლები · მდგომარეობა` — თითო ნაწილი `whitespace-nowrap` (წლები არ იხლიჩება)
+3. სათაური: `text-sm font-medium leading-snug line-clamp-4 md:line-clamp-3` (მობილურზე 2 სვეტში მარჯვენა/მარცხენა უნდა ჩანდეს)
 4. ფასი: `text-lg font-bold text-accent`
 
 კონტეინერი: `bg-white border border-line rounded-card overflow-hidden hover:border-ink transition-colors`, body `p-4`.
@@ -52,7 +52,13 @@ Label + კონტროლი + შეცდომა, ერთიანი 
 `flex justify-between border-b border-line py-3` + label `text-sm text-ink-muted` + value `text-sm font-medium text-ink`. გამოყენება: პროდუქტის სპეცები, კონტაქტის ინფო. ერთი-ერთზე იდენტური კლასები ორივეგან.
 
 ### ფილტრის ზოლი (კატალოგი)
-`bg-white border border-line rounded-card p-4`; მობილურზე სვეტად (`flex-col`), დესკტოპზე: selects `sm:w-auto sm:min-w-36`, ძებნის ველი `sm:flex-1`, ღილაკი `sm:w-auto`. ცარიელი option ყოველთვის „ყველა …" ფორმით („ყველა მოდელი", „ყველა კატეგორია", „ყველა მდგომარეობა").
+`bg-white border border-line rounded-card p-4`; მობილურზე სვეტად (`flex-col`), დესკტოპზე: selects `sm:w-auto sm:min-w-36`, ძებნის ველი `sm:flex-1`, ღილაკი `sm:w-auto`. ცარიელი option ყოველთვის „ყველა …" ფორმით („ყველა მოდელი", „ყველა წელი", „ყველა კატეგორია", „ყველა მდგომარეობა").
+
+### შენახვის შეტყობინება (admin)
+გრძელი ფორმის თავში, redirect-ის შემდეგ (`?saved=1` / `?created=1`): `role="status" rounded-card border border-ink bg-white p-4 text-sm font-medium text-ink`. მოკლე ფორმებზე (settings) — უბრალო status ხაზი. Pending ღილაკი: `disabled` + ზმნა მიმდინარე დროში („ინახება…", „იტვირთება…").
+
+### Sticky დარეკვა (პროდუქტი, მობილური)
+არსებული CTA-ს wrapper: `sticky bottom-0 -mx-4 border-t border-line bg-white px-4 py-3 md:static`. მარჯვენა სვეტი მობილურზე `contents` — sticky-ს საზღვარი მთელი გვერდის grid-ია, ამიტომ ფოტოების რაოდენობის მიუხედავად ღილაკი პირველ ეკრანზე ჩანს. ახალი ელემენტი არ ემატება.
 
 ### ცარიელი მდგომარეობა
 ერთი წინადადება `text-ink-muted`, ცენტრში: „ვერაფერი მოიძებნა" (+ რჩევა თუ საჭიროა). არა ილუსტრაციები.

@@ -1,10 +1,11 @@
-import { Form, Link } from "react-router";
+import { Form, Link, useRouteLoaderData } from "react-router";
 import type { Route } from "./+types/catalog";
+import type { loader as storeLoader } from "./_store";
 import { buttonClass } from "~/design-system/Button";
 import { inputClass, selectClass } from "~/design-system/Field";
 import { ProductCard } from "~/design-system/ProductCard";
 import { getDb } from "~/services/db";
-import { CONDITION_LABELS, MODEL_LABELS, isTeslaModel } from "~/services/format";
+import { CONDITION_LABELS, MODEL_LABELS, isTeslaModel, telHref } from "~/services/format";
 import { listCategories, listProducts } from "~/services/products.server";
 import { pageMeta } from "~/services/seo";
 
@@ -14,7 +15,7 @@ export function meta({ location }: Route.MetaArgs) {
     title: "Tesla-ს ნაწილების კატალოგი — TeslaMarket",
     description: "Tesla Model 3, Model Y, Model S და Model X ავტონაწილები რუსთავში. მოძებნე მოდელით, კატეგორიით, მდგომარეობით ან OEM ნომრით.",
     path: "/catalog",
-    noindex: ["model", "category", "condition", "q"].some((key) => Boolean(params.get(key))),
+    noindex: ["model", "year", "category", "condition", "q"].some((key) => Boolean(params.get(key))),
   });
 }
 
@@ -24,6 +25,10 @@ export async function loader({ request, context }: Route.LoaderArgs) {
   const category = url.searchParams.get("category") ?? "";
   const condition = url.searchParams.get("condition") ?? "";
   const q = url.searchParams.get("q") ?? "";
+  const maxYear = new Date().getFullYear() + 1;
+  const yearNum = Number(url.searchParams.get("year") ?? "");
+  const year = Number.isInteger(yearNum) && yearNum >= 2012 && yearNum <= maxYear ? yearNum : undefined;
+  const years = Array.from({ length: maxYear - 2012 + 1 }, (_, index) => maxYear - index);
 
   const db = getDb(context.cloudflare.env);
   const [items, categories] = await Promise.all([
@@ -32,17 +37,19 @@ export async function loader({ request, context }: Route.LoaderArgs) {
       categorySlug: category || undefined,
       condition: condition || undefined,
       q: q || undefined,
+      year,
     }),
     listCategories(db),
   ]);
 
-  return { items, categories, filters: { model, category, condition, q } };
+  return { items, categories, years, filters: { model, year: year ? String(year) : "", category, condition, q } };
 }
 
 export default function Catalog({ loaderData }: Route.ComponentProps) {
-  const { items, categories, filters } = loaderData;
+  const { items, categories, years, filters } = loaderData;
+  const store = useRouteLoaderData<typeof storeLoader>("routes/_store");
   const selectedModel = isTeslaModel(filters.model) ? MODEL_LABELS[filters.model] : null;
-  const activeFilterCount = [filters.model, filters.category, filters.condition].filter(Boolean).length;
+  const activeFilterCount = [filters.model, filters.year, filters.category, filters.condition].filter(Boolean).length;
   return (
     <div>
       <div className="mx-auto flex max-w-6xl flex-wrap items-baseline justify-between gap-2 px-4 py-8 md:py-10">
@@ -72,7 +79,7 @@ export default function Catalog({ loaderData }: Route.ComponentProps) {
               <summary className="list-item min-h-11 list-inside cursor-pointer py-3 font-medium text-ink underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink">
                 ფილტრები{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
               </summary>
-              <div className="mt-2 grid gap-3 sm:grid-cols-3">
+              <div className="mt-2 grid gap-3 sm:grid-cols-4">
             <select
               name="model"
               aria-label="მოდელი"
@@ -83,6 +90,19 @@ export default function Catalog({ loaderData }: Route.ComponentProps) {
               {Object.entries(MODEL_LABELS).map(([value, label]) => (
                 <option key={value} value={value}>
                   {label}
+                </option>
+              ))}
+            </select>
+            <select
+              name="year"
+              aria-label="მანქანის წელი"
+              defaultValue={filters.year}
+              className={`${selectClass} sm:w-auto sm:min-w-36`}
+            >
+              <option value="">ყველა წელი</option>
+              {years.map((value) => (
+                <option key={value} value={value}>
+                  {value}
                 </option>
               ))}
             </select>
@@ -117,7 +137,7 @@ export default function Catalog({ loaderData }: Route.ComponentProps) {
             </details>
             {(activeFilterCount > 0 || filters.q) && (
               <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-muted">
-                <span>{[selectedModel, categories.find((category) => category.slug === filters.category)?.nameKa, Object.entries(CONDITION_LABELS).find(([value]) => value === filters.condition)?.[1], filters.q && `ძიება: ${filters.q}`].filter(Boolean).join(" · ")}</span>
+                <span>{[selectedModel, filters.year && `წელი: ${filters.year}`, categories.find((category) => category.slug === filters.category)?.nameKa, Object.entries(CONDITION_LABELS).find(([value]) => value === filters.condition)?.[1], filters.q && `ძიება: ${filters.q}`].filter(Boolean).join(" · ")}</span>
                 <Link to="/catalog" className="inline-flex min-h-11 items-center text-ink underline underline-offset-4">გასუფთავება</Link>
               </div>
             )}
@@ -132,10 +152,14 @@ export default function Catalog({ loaderData }: Route.ComponentProps) {
           ) : (
             <div className="mt-8 rounded-card border border-line bg-white p-6">
               <h2 className="text-lg font-medium text-ink">ამ პირობებით ნაწილი ვერ მოიძებნა</h2>
-              <p className="mt-2 text-ink-muted">შეცვალე ძიება ან დაგვიკავშირდი საჭირო ნაწილის დასაზუსტებლად.</p>
+              <p className="mt-2 text-ink-muted">შეცვალე ძიება ან დაგვირეკე — გვითხარი ნაწილის OEM ნომერი ან მანქანის მოდელი და წელი.</p>
               <div className="mt-4 flex flex-wrap gap-3">
+                {store ? (
+                  <a href={telHref(store.siteSettings.phone)} className={buttonClass("cta")}>დარეკვა</a>
+                ) : (
+                  <Link to="/contact" className={buttonClass("primary")}>დაგვიკავშირდი</Link>
+                )}
                 <Link to="/catalog" className={buttonClass("secondary")}>ფილტრების გასუფთავება</Link>
-                <Link to="/contact" className={buttonClass("primary")}>დაგვიკავშირდი</Link>
               </div>
             </div>
           )}

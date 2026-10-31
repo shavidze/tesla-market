@@ -1,4 +1,4 @@
-import { and, count, desc, eq, inArray, like, or } from "drizzle-orm";
+import { and, count, desc, eq, gte, inArray, isNull, like, lte, or } from "drizzle-orm";
 import { categories, productPhotos, products } from "../../db/schema";
 import type {
 	Category,
@@ -16,6 +16,7 @@ export interface ProductFilters {
 	categorySlug?: string;
 	condition?: string;
 	q?: string;
+	year?: number;
 	limit?: number;
 }
 
@@ -98,6 +99,12 @@ export async function listProducts(
 	}
 	if (filters.condition && isCondition(filters.condition)) {
 		conditions.push(eq(products.condition, filters.condition));
+	}
+	if (filters.year) {
+		const fromOk = or(isNull(products.yearFrom), lte(products.yearFrom, filters.year));
+		const toOk = or(isNull(products.yearTo), gte(products.yearTo, filters.year));
+		if (fromOk) conditions.push(fromOk);
+		if (toOk) conditions.push(toOk);
 	}
 	const sanitizedQuery = filters.q?.trim().replace(/[%_]/g, "");
 	if (sanitizedQuery) {

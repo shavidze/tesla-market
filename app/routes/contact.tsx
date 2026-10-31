@@ -44,7 +44,7 @@ export default function Contact({ loaderData }: Route.ComponentProps) {
 			<p className={microLabelClass}>საკონტაქტო ინფორმაცია</p>
 			<h1 className="mt-2 text-3xl font-bold tracking-tight text-ink">კონტაქტი</h1>
 
-			<p className="mt-6 text-3xl font-bold text-ink">{siteSettings.phone}</p>
+			<a href={telHref(siteSettings.phone)} className="mt-6 flex min-h-11 w-fit items-center text-3xl font-bold text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink">{siteSettings.phone}</a>
 
 			<div className="mt-8">
 				<div className="flex justify-between border-b border-line py-3">

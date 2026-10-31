@@ -117,8 +117,8 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
 					)}
 				</div>
 
-				<div className="mt-8 md:col-span-2 md:mt-0">
-					<p className={microLabelClass}>{product.categoryName}</p>
+				<div className="contents md:col-span-2 md:block">
+					<p className={`mt-8 md:mt-0 ${microLabelClass}`}>{product.categoryName}</p>
 					<h1 className="mt-2 text-3xl font-bold leading-tight tracking-tight text-ink">
 						{product.titleKa}
 					</h1>
@@ -151,12 +151,14 @@ export default function ProductPage({ loaderData }: Route.ComponentProps) {
 
 					<p className="mt-6 text-3xl font-bold text-accent">{formatPrice(product.priceTetri)}</p>
 					<p className="mt-3 text-sm text-ink-muted">თავსებადობა დააზუსტე დარეკვით. მიუთითე ნაწილის კოდი ან OEM ნომერი.</p>
-					<a href={callHref} className={buttonClass("cta", "mt-4 h-12 w-full text-base")}>
-						დარეკვა
-					</a>
-					<p className="mt-3 text-sm text-ink-muted">მიღება: მაღაზიაში, {siteSettings.address}</p>
+					<div className="sticky bottom-0 z-10 -mx-4 mt-4 border-t border-line bg-white px-4 py-3 md:static md:mx-0 md:border-0 md:bg-transparent md:p-0">
+						<a href={callHref} className={buttonClass("cta", "h-12 w-full text-base")}>
+							დარეკვა
+						</a>
+					</div>
+					<p className="mt-3 text-sm text-ink-muted">მიღება მაღაზიაში: {siteSettings.address}{siteSettings.hours && <> · <span className="whitespace-nowrap">{siteSettings.hours}</span></>}</p>
 					<a href="https://maps.app.goo.gl/DHXSqmteWNJiuccc8" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center text-sm text-ink underline underline-offset-4">რუკაზე ნახვა</a>
-					{product.descriptionKa && (
+					{product.descriptionKa && product.descriptionKa.trim() !== product.titleKa.trim() && (
 						<section className="mt-6 border-t border-line pt-6" aria-labelledby="description-heading">
 							<h2 id="description-heading" className="font-medium text-ink">აღწერა</h2>
 							<p className="mt-3 whitespace-pre-line text-ink-muted">{product.descriptionKa}</p>

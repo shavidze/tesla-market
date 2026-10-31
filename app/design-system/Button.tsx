@@ -4,7 +4,7 @@ export type ButtonVariant = "primary" | "secondary" | "cta";
 
 export function buttonClass(variant: ButtonVariant = "primary", className = ""): string {
 	const base =
-		"inline-flex min-h-11 items-center justify-center rounded-card px-5 text-base font-medium transition-colors";
+		"inline-flex min-h-11 items-center justify-center rounded-card px-5 text-base font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60";
 	const variants: Record<ButtonVariant, string> = {
 		primary: "bg-ink text-white hover:bg-ink/90",
 		secondary: "border border-line bg-white text-ink hover:bg-bg",

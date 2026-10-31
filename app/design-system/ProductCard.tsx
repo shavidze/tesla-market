@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { Link } from "react-router";
 import type { Condition, TeslaModel } from "../../db/schema";
 import { microLabelClass } from "~/design-system/Label";
@@ -17,14 +18,13 @@ export interface ProductCardData {
 function formatYears(yearFrom: number | null, yearTo: number | null): string {
 	if (yearFrom && yearTo) return `${yearFrom}–${yearTo}`;
 	if (yearFrom) return `${yearFrom}+`;
+	if (yearTo) return `${yearTo}-მდე`;
 	return "";
 }
 
 export function ProductCard({ product }: { product: ProductCardData }) {
 	const years = formatYears(product.yearFrom, product.yearTo);
-	const meta = [MODEL_LABELS[product.teslaModel], years, CONDITION_LABELS[product.condition]]
-		.filter(Boolean)
-		.join(" · ");
+	const meta = [MODEL_LABELS[product.teslaModel], years, CONDITION_LABELS[product.condition]].filter(Boolean);
 
 	return (
 		<Link
@@ -46,8 +46,15 @@ export function ProductCard({ product }: { product: ProductCardData }) {
 				)}
 			</div>
 			<div className="flex flex-1 flex-col p-4">
-				<p className={microLabelClass}>{meta}</p>
-				<h3 className="mt-1 line-clamp-2 text-sm font-medium leading-snug text-ink">
+				<p className={microLabelClass}>
+					{meta.map((part, index) => (
+						<Fragment key={part}>
+							{index > 0 && " · "}
+							<span className="whitespace-nowrap">{part}</span>
+						</Fragment>
+					))}
+				</p>
+				<h3 className="mt-1 line-clamp-4 text-sm md:line-clamp-3 font-medium leading-snug text-ink">
 					{product.titleKa}
 				</h3>
 				<p className="mt-3 text-lg font-bold text-accent">{formatPrice(product.priceTetri)}</p>

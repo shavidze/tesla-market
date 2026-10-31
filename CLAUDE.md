@@ -64,6 +64,7 @@ Agent-ის კოდის შემდეგ ყოველთვის: bui
 
 | Agent | გამოყენება |
 |-------|------------|
+| `product-designer` | UX/ინტერაქციის გეგმა, ეკრანის spec (ქართული copy, states) — user-visible ფიჩერამდე; კოდს არ წერს |
 | `architect` | schema, route structure, ინტეგრაციები — spec, არა კოდი |
 | `coder-agent` | იმპლემენტაცია spec-ის მიხედვით |
 | `code-reviewer` | post-change audit (3+ ფაილი, migration, auth/upload) |

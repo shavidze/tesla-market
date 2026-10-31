@@ -27,7 +27,7 @@ export async function action({ request, context }: Route.ActionArgs) {
 		return { errors: result.errors };
 	}
 	const id = await createProduct(db, result.input);
-	return redirect(`/admin/products/${id}/edit`);
+	return redirect(`/admin/products/${id}/edit?created=1`);
 }
 
 const EMPTY_VALUES: ProductFormValues = {

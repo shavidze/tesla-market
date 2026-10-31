@@ -28,7 +28,9 @@ export async function loader({ request, params, context }: Route.LoaderArgs) {
 	if (!product) {
 		throw new Response("Not Found", { status: 404 });
 	}
-	return { product, categories };
+	const flags = new URL(request.url).searchParams;
+	const notice: "saved" | "created" | null = flags.get("created") ? "created" : flags.get("saved") ? "saved" : null;
+	return { product, categories, notice };
 }
 
 export async function action({ request, params, context }: Route.ActionArgs) {
@@ -43,16 +45,27 @@ export async function action({ request, params, context }: Route.ActionArgs) {
 	const intent = formData.get("intent");
 
 	if (intent === "upload_photo") {
-		const file = formData.get("photo");
-		if (!(file instanceof File) || file.size === 0) {
+		const files = formData
+			.getAll("photo")
+			.filter((entry): entry is File => entry instanceof File && entry.size > 0);
+		if (files.length === 0) {
 			return { photoError: "აირჩიეთ ფოტო" };
 		}
-		const validationError = validatePhotoFile(file);
-		if (validationError) {
-			return { photoError: validationError };
+		const failed: string[] = [];
+		let uploaded = 0;
+		for (const file of files) {
+			const validationError = validatePhotoFile(file);
+			if (validationError) {
+				failed.push(`${file.name} — ${validationError}`);
+				continue;
+			}
+			await addPhoto(db, env, id, file);
+			uploaded += 1;
 		}
-		await addPhoto(db, env, id, file);
-		return { photoOk: true };
+		return {
+			photoNotice: uploaded === 0 ? undefined : uploaded === 1 ? "ფოტო აიტვირთა." : `აიტვირთა ${uploaded} ფოტო.`,
+			photoError: failed.length > 0 ? `ვერ აიტვირთა: ${failed.join("\n")}` : undefined,
+		};
 	}
 
 	if (intent === "delete_photo") {
@@ -64,7 +77,7 @@ export async function action({ request, params, context }: Route.ActionArgs) {
 		if (!result.ok) {
 			return { photoError: result.error };
 		}
-		return { photoOk: true };
+		return { photoNotice: "ფოტო წაიშალა." };
 	}
 
 	if (intent === "generate_desc") {
@@ -93,7 +106,7 @@ export async function action({ request, params, context }: Route.ActionArgs) {
 		return { errors: result.errors };
 	}
 	await updateProduct(db, id, result.input);
-	return redirect(`/admin/products/${id}/edit`);
+	return redirect(`/admin/products/${id}/edit?saved=1`);
 }
 
 function toFormValues(product: ProductWithPhotos): ProductFormValues {
@@ -114,7 +127,7 @@ function toFormValues(product: ProductWithPhotos): ProductFormValues {
 }
 
 export default function EditProduct({ loaderData, actionData }: Route.ComponentProps) {
-	const { product, categories } = loaderData;
+	const { product, categories, notice } = loaderData;
 	return (
 		<div>
 			<h1 className="text-2xl font-bold text-ink">{product.titleKa}</h1>
@@ -138,6 +151,10 @@ export default function EditProduct({ loaderData, actionData }: Route.ComponentP
 					photoError={
 						actionData && "photoError" in actionData ? actionData.photoError : undefined
 					}
+					photoNotice={
+						actionData && "photoNotice" in actionData ? actionData.photoNotice : undefined
+					}
+					notice={actionData ? null : notice}
 				/>
 			</div>
 		</div>

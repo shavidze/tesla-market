@@ -49,13 +49,14 @@ export default function AdminLogin({ actionData }: Route.ComponentProps) {
 			<h1 className="text-2xl font-bold text-ink">ადმინის შესვლა</h1>
 			<Form method="post" className="mt-6 flex flex-col gap-4">
 				<Field label="ელფოსტა" htmlFor="email">
-					<input id="email" name="email" type="email" required className={inputClass} />
+					<input id="email" name="email" type="email" autoComplete="username" required className={inputClass} />
 				</Field>
 				<Field label="პაროლი" htmlFor="password">
 					<input
 						id="password"
 						name="password"
 						type="password"
+						autoComplete="current-password"
 						required
 						className={inputClass}
 					/>

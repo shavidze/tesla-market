@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Form } from "react-router";
+import { Form, useNavigation } from "react-router";
 import type { Category, Condition, ProductPhoto, ProductStatus, TeslaModel } from "../../../db/schema";
 import { Button, buttonClass } from "~/design-system/Button";
 import { Field, inputClass, selectClass, textareaClass } from "~/design-system/Field";
@@ -145,7 +145,9 @@ interface ProductFormProps {
 	photos?: ProductPhoto[];
 	generatedDescription?: string;
 	photoError?: string;
+	photoNotice?: string;
 	generateError?: string;
+	notice?: "saved" | "created" | null;
 }
 
 export function ProductForm({
@@ -156,8 +158,13 @@ export function ProductForm({
 	photos,
 	generatedDescription,
 	photoError,
+	photoNotice,
 	generateError,
+	notice,
 }: ProductFormProps) {
+	const navigation = useNavigation();
+	const pendingIntent = navigation.state === "submitting" ? navigation.formData?.get("intent") : null;
+	const pendingPhotoId = navigation.state === "submitting" ? navigation.formData?.get("photoId") : null;
 	const [slugTouched, setSlugTouched] = useState(mode === "edit");
 	const [slug, setSlug] = useState(defaultValues.slug);
 	const [description, setDescription] = useState(defaultValues.descriptionKa);
@@ -173,6 +180,11 @@ export function ProductForm({
 
 	return (
 		<div className="flex flex-col gap-10">
+			{notice && (
+				<p role="status" className="rounded-card border border-ink bg-white p-4 text-sm font-medium text-ink">
+					{notice === "created" ? "ნაწილი დაემატა. ახლა ქვემოთ ატვირთე მისი ფოტოები." : "ცვლილებები შენახულია."}
+				</p>
+			)}
 			<div className="rounded-card border border-line p-4 text-sm text-ink-muted">
 				<p>გამოქვეყნებამდე გადაამოწმე ფასი, რაოდენობა და ნაწილის მდგომარეობა. ნულოვანი რაოდენობა სტატუსს ავტომატურად არ ცვლის.</p>
 				{!photos?.length && <p className="mt-2">ფოტო ჯერ არ არის. {mode === "create" ? "შეინახე ნაწილი და შემდეგ ატვირთე მისი ნამდვილი ფოტოები რედაქტირების გვერდზე." : "დაამატე ნაწილის ნამდვილი ფოტოები ქვემოთ."}</p>}
@@ -242,6 +254,7 @@ export function ProductForm({
 							id="price"
 							name="price"
 							type="number"
+							inputMode="decimal"
 							step="0.01"
 							defaultValue={defaultValues.price}
 							className={inputClass}
@@ -252,6 +265,7 @@ export function ProductForm({
 							id="quantity"
 							name="quantity"
 							type="number"
+							inputMode="numeric"
 							defaultValue={defaultValues.quantity}
 							className={inputClass}
 						/>
@@ -277,6 +291,7 @@ export function ProductForm({
 							id="yearFrom"
 							name="yearFrom"
 							type="number"
+							inputMode="numeric"
 							value={yearFrom}
 							onChange={(event) => setYearFrom(event.target.value)}
 							className={inputClass}
@@ -287,6 +302,7 @@ export function ProductForm({
 							id="yearTo"
 							name="yearTo"
 							type="number"
+							inputMode="numeric"
 							value={yearTo}
 							onChange={(event) => setYearTo(event.target.value)}
 							className={inputClass}
@@ -299,6 +315,9 @@ export function ProductForm({
 						name="oemNumber"
 						value={oemNumber}
 						onChange={(event) => setOemNumber(event.target.value)}
+						autoCapitalize="characters"
+						autoCorrect="off"
+						spellCheck={false}
 						className={inputClass}
 					/>
 				</Field>
@@ -328,7 +347,9 @@ export function ProductForm({
 						/>
 					</Field>
 				</details>
-				<Button type="submit">შენახვა</Button>
+				<Button type="submit" disabled={pendingIntent === "save"}>
+					{pendingIntent === "save" ? "ინახება…" : "შენახვა"}
+				</Button>
 			</Form>
 
 			{mode === "edit" && (
@@ -337,8 +358,8 @@ export function ProductForm({
 						<h2 className="text-lg font-bold text-ink">აღწერის გენერაცია (AI)</h2>
 						<Form method="post" className="mt-2">
 							<input type="hidden" name="intent" value="generate_desc" />
-							<button type="submit" className={buttonClass("secondary")}>
-								აღწერის გენერაცია (AI)
+							<button type="submit" disabled={pendingIntent === "generate_desc"} className={buttonClass("secondary")}>
+								{pendingIntent === "generate_desc" ? "აღწერა იწერება…" : "აღწერის გენერაცია (AI)"}
 							</button>
 						</Form>
 						{generateError && (
@@ -348,7 +369,7 @@ export function ProductForm({
 						)}
 						{generatedDescription && (
 							<p className="mt-2 text-sm text-ink-muted">
-								გენერირებული აღწერა ჩაისვა ველში ზემოთ — შეინახეთ ფორმის გაგზავნით.
+								აღწერა ჩაისვა ველში ზემოთ. გადაამოწმე, რომ ყველაფერი სწორია, და შემდეგ დააჭირე „შენახვას".
 							</p>
 						)}
 					</div>
@@ -366,14 +387,22 @@ export function ProductForm({
 												className="h-full w-full object-cover"
 											/>
 										</div>
-										<Form method="post">
+										<Form
+											method="post"
+											onSubmit={(event) => {
+												if (!window.confirm("წავშალო ეს ფოტო? წაშლის შემდეგ მისი აღდგენა ვეღარ მოხერხდება.")) {
+													event.preventDefault();
+												}
+											}}
+										>
 											<input type="hidden" name="intent" value="delete_photo" />
 											<input type="hidden" name="photoId" value={photo.id} />
 											<button
 												type="submit"
+												disabled={pendingIntent === "delete_photo" && pendingPhotoId === String(photo.id)}
 												className={buttonClass("secondary", "w-full text-sm")}
 											>
-												წაშლა
+												{pendingIntent === "delete_photo" && pendingPhotoId === String(photo.id) ? "იშლება…" : "წაშლა"}
 											</button>
 										</Form>
 									</div>
@@ -381,24 +410,35 @@ export function ProductForm({
 							</div>
 						)}
 						<Form
+							key={photos?.length ?? 0}
 							method="post"
 							encType="multipart/form-data"
-							className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center"
+							className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center"
 						>
 							<input type="hidden" name="intent" value="upload_photo" />
+							<p id="photo-hint" className="w-full text-sm text-ink-muted">
+								JPEG, PNG ან WebP, თითო ფოტო 5 MB-მდე. შეგიძლია რამდენიმე ერთად აირჩიო.
+							</p>
 							<input
 								type="file"
 								name="photo"
 								accept="image/jpeg,image/png,image/webp"
+								multiple
 								required
-								className={inputClass}
+								aria-describedby="photo-hint"
+								className={`${inputClass} sm:w-auto sm:flex-1`}
 							/>
-							<button type="submit" className={buttonClass("secondary")}>
-								ატვირთვა
+							<button type="submit" disabled={pendingIntent === "upload_photo"} className={buttonClass("secondary")}>
+								{pendingIntent === "upload_photo" ? "იტვირთება…" : "ატვირთვა"}
 							</button>
 						</Form>
+						{photoNotice && (
+							<p role="status" className="mt-2 text-sm font-medium text-ink">
+								{photoNotice}
+							</p>
+						)}
 						{photoError && (
-							<p role="alert" className="mt-2 text-sm font-medium text-ink">
+							<p role="alert" className="mt-2 whitespace-pre-line text-sm font-medium text-ink">
 								{photoError}
 							</p>
 						)}

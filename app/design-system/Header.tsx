@@ -10,9 +10,9 @@ export function Header({ phone }: { phone: string }) {
 			<div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4">
 				<Link
 					to="/"
-					className="flex min-h-11 items-center text-lg font-bold tracking-tight text-ink"
+					className="flex min-h-11 shrink-0 items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
 				>
-					TeslaMarket
+					<img src="/logo.webp" alt="TeslaMarket" width={402} height={192} className="h-11 w-auto" />
 				</Link>
 				<nav className="flex items-center gap-6">
 					<NavLink to="/catalog" className={navLinkClass}>

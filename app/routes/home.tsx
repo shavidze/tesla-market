@@ -8,12 +8,12 @@ import { ProductCard } from "~/design-system/ProductCard";
 import { getDb } from "~/services/db";
 import { countActiveProductsByModel, listCategories, listProducts } from "~/services/products.server";
 import { MODEL_LABELS, telHref } from "~/services/format";
+import { getSettings } from "~/services/settings.server";
 import { pageMeta, SITE_URL } from "~/services/seo";
 
-export function meta(_: Route.MetaArgs) {
-	const title = "TeslaMarket — Tesla-ს ორიგინალი და მეორადი ნაწილები რუსთავში";
-	const description =
-		"Tesla Model 3, Model Y, Model S, Model X ნაწილები — ორიგინალი და მეორადი. მაღაზია რუსთავში, დარეკვით შეკვეთა.";
+export function meta({ data }: Route.MetaArgs) {
+	const title = data?.seo.title ?? "TeslaMarket";
+	const description = data?.seo.description ?? "";
 	return [
 		...pageMeta({ title, description, path: "/" }),
 		{
@@ -30,16 +30,23 @@ export function meta(_: Route.MetaArgs) {
 
 export async function loader({ context }: Route.LoaderArgs) {
 	const db = getDb(context.cloudflare.env);
-	const [categories, latest, modelCounts] = await Promise.all([
+	const [categories, latest, modelCounts, siteSettings] = await Promise.all([
 		listCategories(db),
 		listProducts(db, { limit: 8 }),
 		countActiveProductsByModel(db),
+		getSettings(db),
 	]);
-	return { categories, latest, modelCounts };
+	return {
+		categories,
+		latest,
+		modelCounts,
+		hero: { title: siteSettings.heroTitle, subtitle: siteSettings.heroSubtitle },
+		seo: { title: siteSettings.seoTitle, description: siteSettings.seoDescription },
+	};
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-	const { categories, latest, modelCounts } = loaderData;
+	const { categories, latest, modelCounts, hero } = loaderData;
 	const models = (["model_3", "model_y", "model_s", "model_x"] as const)
 		.map((model) => ({ model, total: modelCounts.find((item) => item.model === model)?.total ?? 0 }))
 		.filter((item) => item.total > 0);
@@ -51,10 +58,10 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 			<section className="mx-auto grid max-w-6xl items-start gap-8 px-4 py-12 md:grid-cols-2 md:items-center md:gap-12 md:py-16">
 				<div>
 					<h1 className="max-w-2xl text-4xl font-bold tracking-tight text-ink md:text-5xl">
-						Tesla-ს ნაწილები
+						{hero.title}
 					</h1>
 					<p className="mt-4 max-w-xl text-lg text-ink-muted">
-						ორიგინალი და მეორადი ავტონაწილები Model 3, Model Y, Model S და Model X-სთვის.
+						{hero.subtitle}
 					</p>
 					<Link to="/catalog" className={buttonClass("primary", "mt-8")}>
 						კატალოგის ნახვა

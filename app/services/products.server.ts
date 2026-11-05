@@ -47,6 +47,14 @@ export async function listCategories(db: Db): Promise<Category[]> {
 	return db.select().from(categories).orderBy(categories.sortOrder);
 }
 
+export async function listActiveConditions(db: Db): Promise<Condition[]> {
+	const rows = await db
+		.selectDistinct({ condition: products.condition })
+		.from(products)
+		.where(eq(products.status, "active"));
+	return rows.map((row) => row.condition);
+}
+
 export async function countActiveProductsByModel(db: Db) {
 	return db.select({ model: products.teslaModel, total: count() })
 		.from(products)

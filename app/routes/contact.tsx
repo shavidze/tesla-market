@@ -12,8 +12,8 @@ const MAP_URL = "https://maps.app.goo.gl/DHXSqmteWNJiuccc8";
 export function meta({ data }: Route.MetaArgs) {
 	return [
 		...pageMeta({
-			title: "Tesla-ს ნაწილების მაღაზია რუსთავში — კონტაქტი | TeslaMarket",
-			description: "TeslaMarket-ის საკონტაქტო ინფორმაცია — ტელეფონი, მისამართი და სამუშაო საათები. Tesla-ს ნაწილების მაღაზია რუსთავში.",
+			title: "ტესლას ნაწილების მაღაზია რუსთავში — კონტაქტი | TeslaMarket",
+			description: "TeslaMarket-ის საკონტაქტო ინფორმაცია — ტელეფონი, მისამართი და სამუშაო საათები. ტესლას ნაწილების მაღაზია რუსთავში.",
 			path: "/contact",
 		}),
 		...(data ? [{

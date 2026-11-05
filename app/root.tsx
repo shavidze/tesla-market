@@ -14,6 +14,7 @@ import "@fontsource/noto-sans-georgian/700.css";
 import "./app.css";
 
 export const links: Route.LinksFunction = () => [
+	{ rel: "icon", href: "/favicon.ico", sizes: "any" },
 	{ rel: "icon", href: "/favicon-32.png", type: "image/png", sizes: "32x32" },
 	{ rel: "icon", href: "/favicon-192.png", type: "image/png", sizes: "192x192" },
 	{ rel: "apple-touch-icon", href: "/apple-touch-icon.png" },

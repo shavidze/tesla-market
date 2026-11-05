@@ -6,14 +6,14 @@ import { inputClass, selectClass } from "~/design-system/Field";
 import { ProductCard } from "~/design-system/ProductCard";
 import { getDb } from "~/services/db";
 import { CONDITION_LABELS, MODEL_LABELS, isTeslaModel, telHref } from "~/services/format";
-import { listCategories, listProducts } from "~/services/products.server";
+import { listActiveConditions, listCategories, listProducts } from "~/services/products.server";
 import { pageMeta } from "~/services/seo";
 
 export function meta({ location }: Route.MetaArgs) {
   const params = new URLSearchParams(location.search);
   return pageMeta({
-    title: "Tesla-ს ნაწილების კატალოგი — TeslaMarket",
-    description: "Tesla Model 3, Model Y, Model S და Model X ავტონაწილები რუსთავში. მოძებნე მოდელით, კატეგორიით, მდგომარეობით ან OEM ნომრით.",
+    title: "ტესლას ნაწილების კატალოგი — Tesla Model 3, Y, S, X | TeslaMarket",
+    description: "ტესლას ნაწილები Tesla Model 3, Model Y, Model S და Model X-სთვის, რუსთავში. მოძებნე მოდელით, კატეგორიით, მდგომარეობით ან OEM ნომრით.",
     path: "/catalog",
     noindex: ["model", "year", "category", "condition", "q"].some((key) => Boolean(params.get(key))),
   });
@@ -31,7 +31,7 @@ export async function loader({ request, context }: Route.LoaderArgs) {
   const years = Array.from({ length: maxYear - 2012 + 1 }, (_, index) => maxYear - index);
 
   const db = getDb(context.cloudflare.env);
-  const [items, categories] = await Promise.all([
+  const [items, categories, conditions] = await Promise.all([
     listProducts(db, {
       model: model || undefined,
       categorySlug: category || undefined,
@@ -40,13 +40,14 @@ export async function loader({ request, context }: Route.LoaderArgs) {
       year,
     }),
     listCategories(db),
+    listActiveConditions(db),
   ]);
 
-  return { items, categories, years, filters: { model, year: year ? String(year) : "", category, condition, q } };
+  return { items, categories, years, conditions, filters: { model, year: year ? String(year) : "", category, condition, q } };
 }
 
 export default function Catalog({ loaderData }: Route.ComponentProps) {
-  const { items, categories, years, filters } = loaderData;
+  const { items, categories, years, conditions, filters } = loaderData;
   const store = useRouteLoaderData<typeof storeLoader>("routes/_store");
   const selectedModel = isTeslaModel(filters.model) ? MODEL_LABELS[filters.model] : null;
   const activeFilterCount = [filters.model, filters.year, filters.category, filters.condition].filter(Boolean).length;
@@ -82,7 +83,7 @@ export default function Catalog({ loaderData }: Route.ComponentProps) {
                   <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </summary>
-              <div className="mt-2 grid gap-3 sm:grid-cols-4">
+              <div className={`mt-2 grid gap-3 ${conditions.length > 1 ? "sm:grid-cols-4" : "sm:grid-cols-3"}`}>
             <select
               name="model"
               aria-label="მოდელი"
@@ -122,6 +123,7 @@ export default function Catalog({ loaderData }: Route.ComponentProps) {
                 </option>
               ))}
             </select>
+            {conditions.length > 1 && (
             <select
               name="condition"
               aria-label="მდგომარეობა"
@@ -129,12 +131,13 @@ export default function Catalog({ loaderData }: Route.ComponentProps) {
               className={`${selectClass} sm:w-auto sm:min-w-36`}
             >
               <option value="">ყველა მდგომარეობა</option>
-              {Object.entries(CONDITION_LABELS).map(([value, label]) => (
+              {conditions.map((value) => (
                 <option key={value} value={value}>
-                  {label}
+                  {CONDITION_LABELS[value]}
                 </option>
               ))}
             </select>
+            )}
               </div>
               <button type="submit" className={buttonClass("secondary", "mt-3")}>ფილტრების გამოყენება</button>
             </details>

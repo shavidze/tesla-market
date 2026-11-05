@@ -6,6 +6,10 @@ export interface SiteSettings {
 	address: string;
 	hours: string;
 	contactName: string;
+	heroTitle: string;
+	heroSubtitle: string;
+	seoTitle: string;
+	seoDescription: string;
 }
 
 const DEFAULTS: SiteSettings = {
@@ -13,6 +17,10 @@ const DEFAULTS: SiteSettings = {
 	address: "რუსთავი",
 	hours: "ორშ–შაბ, 10:00–19:00",
 	contactName: "თორნიკე მექოშვილი",
+	heroTitle: "ტესლას მაღალი ხარისხის ახალი ნაწილები",
+	heroSubtitle: "Tesla Model 3, Model Y, Model S და Model X‑სთვის. მაღაზია რუსთავში.",
+	seoTitle: "ტესლას მაღალი ხარისხის ახალი ნაწილები რუსთავში | TeslaMarket",
+	seoDescription: "ტესლას მაღალი ხარისხის ახალი ნაწილები Tesla Model 3, Model Y, Model S და Model X-სთვის. მაღაზია რუსთავში, შეკვეთა დარეკვით.",
 };
 
 const KEY_MAP: Record<string, keyof SiteSettings> = {
@@ -20,6 +28,10 @@ const KEY_MAP: Record<string, keyof SiteSettings> = {
 	address: "address",
 	hours: "hours",
 	contact_name: "contactName",
+	hero_title: "heroTitle",
+	hero_subtitle: "heroSubtitle",
+	seo_title: "seoTitle",
+	seo_description: "seoDescription",
 };
 
 export async function getSettings(db: Db): Promise<SiteSettings> {
@@ -38,6 +50,10 @@ export async function saveSettings(db: Db, values: SiteSettings): Promise<void> 
 		["address", values.address],
 		["hours", values.hours],
 		["contact_name", values.contactName],
+		["hero_title", values.heroTitle],
+		["hero_subtitle", values.heroSubtitle],
+		["seo_title", values.seoTitle],
+		["seo_description", values.seoDescription],
 	];
 	for (const [key, value] of entries) {
 		await db

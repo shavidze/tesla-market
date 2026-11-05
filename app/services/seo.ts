@@ -6,7 +6,7 @@ export function pageMeta({
 	title,
 	description,
 	path,
-	image = `${SITE_URL}/og.png`,
+	image = `${SITE_URL}/og.png?v=2`,
 	noindex = false,
 }: {
 	title: string;

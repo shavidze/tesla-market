@@ -8,8 +8,8 @@ export function Footer({ phone, address, hours }: { phone: string; address: stri
 			<div className="mx-auto max-w-6xl px-4">
 				<div className="grid gap-8 md:grid-cols-3">
 					<div>
-						<p className="text-lg font-bold tracking-tight text-white">TeslaMarket</p>
-						<p className="mt-2 text-sm text-white/50">იმპორტირებული Tesla-ს ნაწილები · რუსთავი</p>
+						<img src="/logo-white.webp" alt="TeslaMarket" width={402} height={192} loading="lazy" className="h-11 w-auto" />
+						<p className="mt-2 text-sm text-white/50">იმპორტირებული ტესლას ნაწილები · რუსთავი</p>
 					</div>
 					<div>
 						<p className={darkLabelClass}>კონტაქტი</p>

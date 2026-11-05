@@ -40,11 +40,11 @@ Label + კონტროლი + შეცდომა, ერთიანი 
 
 ## Header — `Header.tsx`
 
-`h-16 border-b border-line bg-white`. Wordmark: `font-bold tracking-tight text-lg text-ink` (ლოგო-გრაფიკა არ გვაქვს საიტში — ბრენდი ტიპოგრაფიულია). ნავიგაცია: `text-sm text-ink-muted hover:text-ink`, `min-h-11`; მიმდინარე გვერდი `aria-[current=page]:font-medium aria-[current=page]:text-ink`. ≥768px-ზე ბოლოს ტელეფონი (`tel:`, `text-ink font-medium tabular-nums`); მობილურზე არა — იქ sticky „დარეკვა" მუშაობს. Props: `phone`.
+`h-16 border-b border-line bg-white`. ლოგო: `<img src="/logo.webp" class="h-11 w-auto">` (alt „TeslaMarket"). ნავიგაცია: `text-sm text-ink-muted hover:text-ink`, `min-h-11`; მიმდინარე გვერდი `aria-[current=page]:font-medium aria-[current=page]:text-ink`. ≥768px-ზე ბოლოს ტელეფონი (`tel:`, `text-ink font-medium tabular-nums`); მობილურზე არა — იქ sticky „დარეკვა" მუშაობს. Props: `phone`.
 
 ## Footer — `Footer.tsx` (კონტრასტული ბლოკი)
 
-`bg-ink py-12` — გვერდის ერთადერთი მუქი სექცია. 3 სვეტი: wordmark (`text-white`) · კონტაქტი (მიკრო-ლეიბლი `text-white/50` + ტელეფონი `tel:` ლინკით `text-white min-h-11`) · მისამართი. wordmark-ის ქვეშ „იმპორტირებული Tesla-ს ნაწილები · რუსთავი" (`text-sm text-white/50`), მისამართის ქვეშ საათები. ქვედა ზოლი: `border-t border-white/15` + `© {წელი} TeslaMarket` (`text-white/50 text-xs`). Props: `phone`, `address`, `hours` — settings-იდან (DB).
+`bg-ink py-12` — გვერდის ერთადერთი მუქი სექცია. 3 სვეტი: თეთრი ლოგო (`/logo-white.webp`, `h-12`) · კონტაქტი (მიკრო-ლეიბლი `text-white/50` + ტელეფონი `tel:` ლინკით `text-white min-h-11`) · მისამართი. wordmark-ის ქვეშ „იმპორტირებული Tesla-ს ნაწილები · რუსთავი" (`text-sm text-white/50`), მისამართის ქვეშ საათები. ქვედა ზოლი: `border-t border-white/15` + `© {წელი} TeslaMarket` (`text-white/50 text-xs`). Props: `phone`, `address`, `hours` — settings-იდან (DB).
 
 ## პატერნები (კომპონენტებზე მაღლა)
 
